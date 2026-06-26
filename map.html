@@ -112,6 +112,7 @@
     <span class="cp-emoji" id="drawer-emoji">🍪</span>
     <div class="cp-details">
       <div style="font-weight:800;font-size:16px;" id="drawer-name">Cookies DC</div>
+      <div style="font-size:11px;color:var(--muted);" id="drawer-address"></div>
       <div style="font-size:12px;color:var(--muted);" id="drawer-perk"></div>
     </div>
     <div style="text-align:right;">
@@ -129,11 +130,11 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="app.js"></script>
 <script>
-  // Initialize map centered on U Street corridor
+  // Initialize map centered on U Street corridor — spans from Whitlow's (901 U St) to Chi-Cha (1624 U St)
   const map = L.map('map', {
     zoomControl: true,
     attributionControl: false,
-  }).setView([38.9172, -77.0278], 16);
+  }).setView([38.9171, -77.0300], 15);
 
   // Dark-themed tiles
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -173,10 +174,11 @@
     });
 
     const popupContent = `
-      <div style="text-align:center;min-width:120px;">
+      <div style="text-align:center;min-width:140px;">
         <div style="font-size:24px;">${cp.emoji}</div>
         <div style="font-weight:800;font-size:14px;margin-top:4px;">${cp.name}</div>
-        <div style="font-size:11px;color:var(--muted);">${cp.perk}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px;">${cp.address || ''}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">${cp.perk}</div>
         <div style="font-weight:700;color:var(--blue-bright);margin-top:4px;">
           ${cp.points > 0 ? '+' + cp.points + ' pts' : 'HQ'}
           ${earned ? ' ✓ Collected' : ''}
@@ -192,6 +194,7 @@
       drawer.classList.add('active');
       document.getElementById('drawer-emoji').textContent = cp.emoji;
       document.getElementById('drawer-name').textContent = cp.name;
+      document.getElementById('drawer-address').textContent = cp.address || '';
       document.getElementById('drawer-perk').textContent = cp.perk;
       document.getElementById('drawer-pts').textContent = cp.points > 0 ? `+${cp.points}` : 'HQ';
       document.getElementById('drawer-link').href = `checkpoint.html?id=${cp.id}`;

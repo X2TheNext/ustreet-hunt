@@ -69,6 +69,7 @@
   <div class="cp-hero">
     <span class="cp-emoji-lg" id="cp-emoji">🍪</span>
     <h1 style="margin-top:12px;" id="cp-name">Cookies DC</h1>
+    <p class="sub" id="cp-address" style="margin-top:4px;"></p>
     <div style="margin-top:8px;">
       <span class="badge badge-blue" id="cp-type">HQ</span>
       <span class="badge badge-gold hidden" id="cp-collected">✓ Collected</span>
@@ -137,6 +138,9 @@
     document.getElementById('cp-perk').textContent = cp.perk;
     document.getElementById('cp-points').textContent = cp.points > 0 ? `+${cp.points} pts` : 'HQ';
     document.getElementById('cp-type-val').textContent = cp.type.toUpperCase();
+    // Set address
+    const addrEl = document.getElementById('cp-address');
+    if (addrEl && cp.address) addrEl.textContent = cp.address;
 
     const typeBadge = document.getElementById('cp-type');
     typeBadge.textContent = cp.type === 'hq' ? '🏠 HQ' : cp.type === 'bonus' ? '⭐ BONUS' : '📍 Checkpoint';

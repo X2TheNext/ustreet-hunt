@@ -231,17 +231,17 @@ async function getUserRank() {
 
 // ── Checkpoints Data (Hardcoded for offline + fallback) ──
 const CHECKPOINTS = [
-  { id: 'cookies-dc', name: 'Cookies DC', lat: 38.91723, lng: -77.02779, points: 0, type: 'hq', perk: 'Registration & Redemption HQ', emoji: '🍪' },
-  { id: 'chi-cha', name: 'Chi-Cha Lounge', lat: 38.91740, lng: -77.02730, points: 10, type: 'checkpoint', perk: '10% off hookah', emoji: '🌙' },
-  { id: 'service-bar', name: 'Service Bar', lat: 38.91700, lng: -77.02800, points: 10, type: 'checkpoint', perk: 'Free side with any order', emoji: '🍹' },
-  { id: 'oohs-and-ahhs', name: 'Oohs & Ahhs', lat: 38.91710, lng: -77.02750, points: 10, type: 'checkpoint', perk: 'Free dessert with entree', emoji: '🍽️' },
-  { id: 'pure', name: 'Pure Lounge', lat: 38.91750, lng: -77.02760, points: 10, type: 'checkpoint', perk: 'Free entry before 11pm', emoji: '🎵' },
-  { id: 'dna', name: 'DNA', lat: 38.91680, lng: -77.02810, points: 10, type: 'checkpoint', perk: 'Buy one get one half off', emoji: '🧬' },
-  { id: '1942-lounge', name: '1942 Lounge', lat: 38.91730, lng: -77.02820, points: 10, type: 'checkpoint', perk: '10% off first drink', emoji: '🥃' },
-  { id: 'whitlows', name: "Whitlow's", lat: 38.91690, lng: -77.02790, points: 10, type: 'checkpoint', perk: '$5 appetizer menu', emoji: '🍔' },
-  { id: 'tipsy-hookah', name: 'Tipsy Hookah Lounge', lat: 38.91760, lng: -77.02770, points: 10, type: 'checkpoint', perk: 'Free tea with hookah', emoji: '💨' },
-  { id: 'ebbitt', name: 'Ebbitt / Ebees', lat: 38.91550, lng: -77.03000, points: 20, type: 'bonus', perk: 'Late-night food til 2am', emoji: '🌟' },
-  { id: 'wednesdays', name: '&Wednesdays Pop-up', lat: 38.91723, lng: -77.02779, points: 10, type: 'checkpoint', perk: 'Limited-edition menu item', emoji: '🎪' },
+  { id: 'cookies-dc', name: 'Cookies DC', address: '1115 U St NW, Washington, DC 20009', lat: 38.91720, lng: -77.02779, points: 0, type: 'hq', perk: 'Registration & Redemption HQ — Start & finish here', emoji: '🍪' },
+  { id: 'whitlows', name: "Whitlow's", address: '901 U St NW, Washington, DC 20001', lat: 38.91690, lng: -77.02449, points: 10, type: 'checkpoint', perk: '$5 appetizer menu with passport', emoji: '🍔' },
+  { id: 'service-bar', name: 'Service Bar', address: '926-928 U St NW, Washington, DC 20001', lat: 38.91700, lng: -77.02492, points: 10, type: 'checkpoint', perk: 'Free side with any order', emoji: '🍹' },
+  { id: 'oohs-and-ahhs', name: 'Oohs & Ahhs', address: '1005 U St NW, Washington, DC 20001', lat: 38.91708, lng: -77.02618, points: 10, type: 'checkpoint', perk: 'Free dessert with entree', emoji: '🍽️' },
+  { id: 'tipsy-hookah', name: 'Tipsy Hookah Lounge', address: '1212 U St NW, Washington, DC 20009', lat: 38.91715, lng: -77.02889, points: 10, type: 'checkpoint', perk: 'Free tea with any hookah', emoji: '💨' },
+  { id: 'pure', name: 'Pure Lounge', address: '1326 U St NW, Washington, DC 20009', lat: 38.91732, lng: -77.03124, points: 10, type: 'checkpoint', perk: 'Free entry before 11pm with passport', emoji: '🎵' },
+  { id: '1942-lounge', name: '1942 Lounge', address: '1344 U St NW, Washington, DC 20009', lat: 38.91734, lng: -77.03156, points: 10, type: 'checkpoint', perk: '10% off first drink', emoji: '🥃' },
+  { id: 'dna', name: 'DNA Lounge', address: '1350 U St NW, Washington, DC 20009', lat: 38.91737, lng: -77.03187, points: 10, type: 'checkpoint', perk: 'Buy one get one half off', emoji: '🧬' },
+  { id: 'chi-cha', name: 'Chi-Cha Lounge', address: '1624 U St NW, Washington, DC 20009', lat: 38.91682, lng: -77.03752, points: 10, type: 'checkpoint', perk: '10% off hookah + Finale venue', emoji: '🌙' },
+  { id: 'ebbitt', name: 'Old Ebbitt Grill', address: '675 15th St NW, Washington, DC 20005', lat: 38.89744, lng: -77.03318, points: 20, type: 'bonus', perk: 'Late-night food til 2am — BONUS stop', emoji: '🌟' },
+  { id: 'wednesdays', name: '&Wednesdays Pop-up', address: '1115 U St NW, Washington, DC 20009', lat: 38.91720, lng: -77.02779, points: 10, type: 'checkpoint', perk: 'Limited-edition menu item at Cookies HQ', emoji: '🎪' },
 ];
 
 function getCheckpoint(id) {
