@@ -4,8 +4,8 @@
  */
 
 // ── Supabase Client ──
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+const SUPABASE_URL = 'https://aayigsbmmdolvnicxacs.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ofAZ_64cKZXJefM5nbbt3g_wNOoF5DC';
 
 let supabase;
 
@@ -293,6 +293,34 @@ function showToast(message, type = '') {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2800);
 }
+
+// ── Twilio SMS (via Supabase Edge Function) ──
+async function sendSMS(phoneDigits, message) {
+  const sb = initSupabase();
+  try {
+    const { error } = await sb.functions.invoke('send-sms', {
+      body: { to: phoneDigits, message }
+    });
+    if (error) {
+      console.warn('Edge function error, falling back to native SMS:', error);
+      const sep = /iPad|iPhone|iPod/.test(navigator.userAgent) ? '&' : '?';
+      window.open('sms:' + phoneDigits + sep + 'body=' + encodeURIComponent(message), '_blank');
+    }
+    return true;
+  } catch(e) {
+    console.warn('Edge function unavailable:', e);
+    const sep = /iPad|iPhone|iPod/.test(navigator.userAgent) ? '&' : '?';
+    window.open('sms:' + phoneDigits + sep + 'body=' + encodeURIComponent(message), '_blank');
+    return true;
+  }
+}
+
+// ── Welcome SMS after registration ──
+async function sendWelcomeSMS(phoneDigits, hunterName) {
+  const msg = '🍪 Welcome to the U Street Hunt, ' + hunterName + '! Your digital passport is live. Explore the corridor, scan at every stop, earn points & win prizes. July 11-18. Map: https://ustreet-hunt.atcheofficial.com/map.html';
+  return sendSMS(phoneDigits, msg);
+}
+
 
 // ── Countdown ──
 function getLaunchDate() {

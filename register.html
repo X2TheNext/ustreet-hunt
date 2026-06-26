@@ -250,6 +250,17 @@
     displayNameInput.value = user.display_name || '';
     profileNameDisplay.textContent = `Hunter since ${new Date().toLocaleDateString()}`;
 
+    // Send welcome SMS via Twilio Edge Function
+    const phoneRaw = sessionStorage.getItem('otp_phone');
+    if (phoneRaw) {
+      try {
+        const phone = JSON.parse(phoneRaw);
+        const digits = phone.replace(/[^\\d]/g, '');
+        sendWelcomeSMS(digits, user.display_name || 'Hunter');
+        showToast('Check your phone for the map link! 📱');
+      } catch(e) { console.warn('Welcome SMS failed:', e); }
+    }
+
     otpScreen.classList.add('hidden');
     profileScreen.classList.remove('hidden');
   });
