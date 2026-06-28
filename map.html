@@ -33,7 +33,7 @@
       position: relative;
       max-width: 480px;
       margin: 0 auto;
-      padding: 24px 28px 40px;
+      padding: 24px 28px calc(env(safe-area-inset-bottom, 0px) + 100px);
     }
 
     /* The vertical road line */
@@ -544,7 +544,13 @@
 
 <script src="app.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+
+  // Wait for user stamps to load before building corridor so collected state renders correctly
+  if (getSession()) {
+    currentUser = getSession();
+    await loadUserData();
+  }
 
   const wrap = document.getElementById('corridor-wrap');
   const overlay = document.getElementById('drawer-overlay');
@@ -644,10 +650,11 @@ document.addEventListener('DOMContentLoaded', function() {
     wrap.appendChild(row);
   });
 
-  // End cap
+  // End cap — use the HQ stop as the finish anchor
+  const hqStop = CHECKPOINTS.find(c => c.type === 'hq') || CHECKPOINTS[CHECKPOINTS.length - 1];
   const endCap = document.createElement('div');
   endCap.className = 'corridor-cap';
-  endCap.innerHTML = `<span class="corridor-cap-icon">🏁</span>Chi-Cha Finale`;
+  endCap.innerHTML = `<span class="corridor-cap-icon">🏁</span>${hqStop.name} — Finish Here`;
   wrap.appendChild(endCap);
 
 }); // end DOMContentLoaded
