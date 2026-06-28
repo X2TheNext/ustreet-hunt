@@ -16,22 +16,23 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    html, body { height: 100%; margin: 0; padding: 0; }
+    html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { display: flex; flex-direction: column; }
     .map-header {
-      padding: 20px 28px 12px;
+      flex-shrink: 0;
+      padding: 16px 28px 10px;
       text-align: center;
     }
-    .map-header h1 { font-size: clamp(24px, 5vw, 34px); }
+    .map-header h1 { font-size: clamp(20px, 4vw, 28px); }
     #map {
       flex: 1;
-      height: 55svh;
-      min-height: 400px;
+      width: 100%;
+      /* No height override — flex:1 fills remaining space after header+drawer */
+      min-height: 0; /* critical: lets flex shrink below content size */
       border-radius: 0;
-      border-left: none;
-      border-right: none;
     }
     .checkpoint-drawer {
+      flex-shrink: 0;
       padding: 16px 28px 24px;
       background: rgba(4, 16, 43, .95);
       border-top: 1px solid var(--line);
@@ -151,6 +152,9 @@
     zoomControl: true,
     attributionControl: false,
   }).setView([38.9171, -77.0300], 15);
+
+  // Force Leaflet to recalculate container size after DOM settles
+  setTimeout(() => map.invalidateSize(), 100);
 
   // Dark-themed tiles (CartoDB Dark Matter — no API key required)
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
