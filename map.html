@@ -544,18 +544,68 @@
 
 <script src="app.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', function() {
 
-  // Wait for user stamps to load before building corridor so collected state renders correctly
+  // Seed currentUser from localStorage immediately so stamps are available sync
   if (getSession()) {
     currentUser = getSession();
-    await loadUserData();
   }
 
   const wrap = document.getElementById('corridor-wrap');
   const overlay = document.getElementById('drawer-overlay');
   const drawer = document.getElementById('cp-drawer');
   let activeRow = null;
+  const rowMap = {}; // cp.id → row element, for stamp refresh
+
+  // ── Build corridor immediately (no network wait) ──
+  function buildCorridor() {
+    // Clear any prior render
+    wrap.querySelectorAll('.stop-row, .corridor-cap').forEach(el => el.remove());
+
+    CHECKPOINTS.forEach((cp, i) => {
+      const earned = userStamps.includes(cp.id);
+      const side = i % 2 === 0 ? 'left' : 'right';
+
+      const nodeClass = cp.type === 'hq' ? 'hq' : cp.type === 'bonus' ? 'bonus' : '';
+      const cardClass = cp.type === 'hq' ? 'hq-card' : cp.type === 'bonus' ? 'bonus-card' : '';
+      const ptsColor  = cp.type === 'hq' ? 'gold' : cp.type === 'bonus' ? 'green' : 'blue';
+      const ptsLabel  = cp.points > 0 ? `+${cp.points} pts` : 'HQ';
+
+      const row = document.createElement('div');
+      row.className = `stop-row ${side}`;
+      row.style.animationDelay = `${i * 0.07}s`;
+
+      row.innerHTML = `
+        <div class="stop-card ${cardClass} ${earned ? 'collected-card' : ''}">
+          <div class="stop-name">${cp.name}</div>
+          <div class="stop-perk">${cp.perk}</div>
+          <div class="stop-pts ${ptsColor}">${ptsLabel}</div>
+          ${earned ? '<div class="stop-collected-badge">✓ Stamped</div>' : ''}
+        </div>
+        <div class="stop-node">
+          <div class="node-dot ${nodeClass} ${earned ? 'collected' : ''}">${earned ? '✅' : cp.emoji}</div>
+        </div>
+        <div class="stop-connector"></div>
+      `;
+
+      row.addEventListener('click', () => {
+        if (activeRow && activeRow !== row) activeRow.classList.remove('active');
+        row.classList.add('active');
+        activeRow = row;
+        openDrawer(cp);
+      });
+
+      wrap.appendChild(row);
+      rowMap[cp.id] = row;
+    });
+
+    // End cap
+    const hqStop = CHECKPOINTS.find(c => c.type === 'hq') || CHECKPOINTS[CHECKPOINTS.length - 1];
+    const endCap = document.createElement('div');
+    endCap.className = 'corridor-cap';
+    endCap.innerHTML = `<span class="corridor-cap-icon">🏁</span>${hqStop.name} — Finish Here`;
+    wrap.appendChild(endCap);
+  }
 
   function openDrawer(cp) {
     const earned = userStamps.includes(cp.id);
@@ -590,7 +640,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       collectedMsg.classList.add('hidden');
     }
 
-    // Directions deep link — opens Apple Maps or Google Maps
     document.getElementById('d-directions').onclick = () => {
       const query = encodeURIComponent(cp.address || cp.name + ' Washington DC');
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -613,49 +662,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   document.getElementById('drawer-close').addEventListener('click', closeDrawer);
   overlay.addEventListener('click', closeDrawer);
 
-  // Build corridor
-  CHECKPOINTS.forEach((cp, i) => {
-    const earned = userStamps.includes(cp.id);
-    const side = i % 2 === 0 ? 'left' : 'right';
+  // ── Render immediately ──
+  buildCorridor();
 
-    const nodeClass = cp.type === 'hq' ? 'hq' : cp.type === 'bonus' ? 'bonus' : '';
-    const cardClass = cp.type === 'hq' ? 'hq-card' : cp.type === 'bonus' ? 'bonus-card' : '';
-    const ptsColor = cp.type === 'hq' ? 'gold' : cp.type === 'bonus' ? 'green' : 'blue';
-    const ptsLabel = cp.points > 0 ? `+${cp.points} pts` : 'HQ';
-
-    const row = document.createElement('div');
-    row.className = `stop-row ${side}`;
-    row.style.animationDelay = `${i * 0.07}s`;
-
-    row.innerHTML = `
-      <div class="stop-card ${cardClass} ${earned ? 'collected-card' : ''}">
-        <div class="stop-name">${cp.name}</div>
-        <div class="stop-perk">${cp.perk}</div>
-        <div class="stop-pts ${ptsColor}">${ptsLabel}</div>
-        ${earned ? '<div class="stop-collected-badge">✓ Stamped</div>' : ''}
-      </div>
-      <div class="stop-node">
-        <div class="node-dot ${nodeClass} ${earned ? 'collected' : ''}">${earned ? '✅' : cp.emoji}</div>
-      </div>
-      <div class="stop-connector"></div>
-    `;
-
-    row.addEventListener('click', () => {
-      if (activeRow && activeRow !== row) activeRow.classList.remove('active');
-      row.classList.add('active');
-      activeRow = row;
-      openDrawer(cp);
-    });
-
-    wrap.appendChild(row);
-  });
-
-  // End cap — use the HQ stop as the finish anchor
-  const hqStop = CHECKPOINTS.find(c => c.type === 'hq') || CHECKPOINTS[CHECKPOINTS.length - 1];
-  const endCap = document.createElement('div');
-  endCap.className = 'corridor-cap';
-  endCap.innerHTML = `<span class="corridor-cap-icon">🏁</span>${hqStop.name} — Finish Here`;
-  wrap.appendChild(endCap);
+  // ── Then fetch fresh stamps from Supabase and re-render collected state ──
+  if (getSession()) {
+    loadUserData().then(() => {
+      // Just rebuild — fast since it's all DOM, no network
+      buildCorridor();
+    }).catch(() => { /* silent — corridor already showing */ });
+  }
 
 }); // end DOMContentLoaded
 </script>
