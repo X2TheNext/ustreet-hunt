@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Map — U Street Hunt</title>
+  <title>The Corridor — U Street Hunt</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="U Street Hunt">
@@ -12,269 +12,643 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { display: flex; flex-direction: column; }
-    .map-header {
-      flex-shrink: 0;
-      padding: 16px 28px 10px;
+
+    /* ── Page layout ── */
+    .corridor-header {
       text-align: center;
+      padding: 32px 28px 8px;
     }
-    .map-header h1 { font-size: clamp(20px, 4vw, 28px); }
-    #map {
-      flex: 1;
-      width: 100%;
-      /* No height override — flex:1 fills remaining space after header+drawer */
-      min-height: 0; /* critical: lets flex shrink below content size */
-      border-radius: 0;
+    .corridor-header h1 { font-size: clamp(26px, 6vw, 38px); }
+    .corridor-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
     }
-    .checkpoint-drawer {
-      flex-shrink: 0;
-      padding: 16px 28px 24px;
-      background: rgba(4, 16, 43, .95);
-      border-top: 1px solid var(--line);
+
+    /* ── Street spine ── */
+    .corridor-wrap {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 24px 28px 40px;
     }
-    .selected-cp {
-      display: none;
+
+    /* The vertical road line */
+    .street-spine {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(91,157,255,0.15) 4%,
+        rgba(91,157,255,0.35) 15%,
+        rgba(91,157,255,0.35) 85%,
+        rgba(91,157,255,0.15) 96%,
+        transparent 100%
+      );
+      border-radius: 2px;
     }
-    .selected-cp.active { display: block; }
-    .cp-info-row {
+
+    /* Dashed center line on the road */
+    .street-spine::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      transform: translateX(-50%);
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(91,157,255,0.5) 0px,
+        rgba(91,157,255,0.5) 10px,
+        transparent 10px,
+        transparent 22px
+      );
+    }
+
+    /* ── Stop row ── */
+    .stop-row {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-    .cp-emoji {
-      font-size: 40px;
-    }
-    .cp-details { flex: 1; }
-    .leaflet-popup-content-wrapper {
-      background: var(--navy2) !important;
-      color: var(--white) !important;
-      border: 1px solid var(--line) !important;
-      border-radius: 10px !important;
-      font-family: var(--font) !important;
-    }
-    .leaflet-popup-tip { background: var(--navy2) !important; }
-    /* Custom marker */
-    .custom-marker {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--blue-bright); border: 3px solid #fff;
-      box-shadow: 0 0 20px rgba(91,157,255,.8), 0 0 0 8px rgba(91,157,255,.12);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 17px; color: #fff; font-weight: 900;
-      animation: markerGlow 2.5s ease-in-out infinite;
-    }
-    .custom-marker.hq {
-      background: #f0c850; border-color: #0a1c41;
-      box-shadow: 0 0 22px rgba(240,200,80,.9), 0 0 0 8px rgba(240,200,80,.15);
-      animation: markerGlowHQ 2.5s ease-in-out infinite;
-    }
-    .custom-marker.bonus {
-      background: #20c870;
-      box-shadow: 0 0 22px rgba(32,200,112,.9), 0 0 0 8px rgba(32,200,112,.15);
-      animation: markerGlowBonus 2.5s ease-in-out infinite;
-    }
-    .custom-marker.collected { background: #3d5a80; box-shadow: 0 0 8px rgba(61,90,128,.3); border-color: #5d7a9f; animation: none; opacity: .6; }
-    @keyframes markerGlow { 0%,100% { box-shadow: 0 0 20px rgba(91,157,255,.8), 0 0 0 8px rgba(91,157,255,.12); } 50% { box-shadow: 0 0 30px rgba(91,157,255,1), 0 0 0 14px rgba(91,157,255,.08); } }
-    @keyframes markerGlowHQ { 0%,100% { box-shadow: 0 0 22px rgba(240,200,80,.9), 0 0 0 8px rgba(240,200,80,.15); } 50% { box-shadow: 0 0 35px rgba(240,200,80,1), 0 0 0 14px rgba(240,200,80,.08); } }
-    @keyframes markerGlowBonus { 0%,100% { box-shadow: 0 0 22px rgba(32,200,112,.9), 0 0 0 8px rgba(32,200,112,.15); } 50% { box-shadow: 0 0 35px rgba(32,200,112,1), 0 0 0 14px rgba(32,200,112,.08); } }
-    .location-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 1000;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: var(--navy2);
-      border: 1px solid var(--line);
-      color: var(--white);
-      font-size: 18px;
+      gap: 0;
+      margin-bottom: 28px;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Alternating left/right layout */
+    .stop-row.left  { flex-direction: row; }
+    .stop-row.right { flex-direction: row-reverse; }
+
+    /* ── Stop card ── */
+    .stop-card {
+      flex: 1;
+      background: linear-gradient(135deg, rgba(26,115,232,.14), rgba(4,16,43,.9) 70%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      transition: all 0.3s cubic-bezier(.16,1,.3,1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stop-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(91,157,255,0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 14px;
+    }
+
+    .stop-row:hover .stop-card::before,
+    .stop-row.active .stop-card::before { opacity: 1; }
+
+    .stop-row.active .stop-card {
+      border-color: rgba(91,157,255,.55);
+      box-shadow: 0 0 24px -4px rgba(91,157,255,.3);
+      transform: scale(1.02);
+    }
+
+    .stop-row.active .stop-card.hq-card {
+      border-color: rgba(240,200,80,.6);
+      box-shadow: 0 0 24px -4px rgba(240,200,80,.3);
+    }
+
+    .stop-row.active .stop-card.bonus-card {
+      border-color: rgba(32,200,112,.6);
+      box-shadow: 0 0 24px -4px rgba(32,200,112,.3);
+    }
+
+    .stop-card.hq-card {
+      background: linear-gradient(135deg, rgba(240,200,80,.16), rgba(4,16,43,.9) 70%);
+      border-color: rgba(240,200,80,.3);
+    }
+
+    .stop-card.bonus-card {
+      background: linear-gradient(135deg, rgba(32,200,112,.14), rgba(4,16,43,.9) 70%);
+      border-color: rgba(32,200,112,.25);
+    }
+
+    .stop-card.collected-card {
+      opacity: 0.6;
+    }
+
+    .stop-name {
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1.2;
+      color: var(--white);
+    }
+
+    .stop-perk {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    .stop-pts {
+      font-weight: 800;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .stop-pts.blue  { color: var(--blue-bright); }
+    .stop-pts.gold  { color: #f0c850; }
+    .stop-pts.green { color: #20c870; }
+    .stop-pts.muted { color: var(--muted); }
+
+    .stop-collected-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--blue-bright);
+      background: rgba(91,157,255,.12);
+      border-radius: 100px;
+      padding: 2px 8px;
+      margin-top: 4px;
+    }
+
+    /* ── Node (center dot) ── */
+    .stop-node {
+      flex-shrink: 0;
+      width: 52px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .node-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--navy);
+      border: 3px solid rgba(91,157,255,.5);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s cubic-bezier(.16,1,.3,1);
+      position: relative;
     }
+
+    .node-dot.hq {
+      border-color: rgba(240,200,80,.7);
+      background: rgba(240,200,80,.08);
+    }
+
+    .node-dot.bonus {
+      border-color: rgba(32,200,112,.6);
+      background: rgba(32,200,112,.06);
+    }
+
+    .node-dot.collected {
+      border-color: var(--blue-bright);
+      background: rgba(91,157,255,.15);
+    }
+
+    /* Pulse ring on uncollected nodes */
+    .node-dot:not(.collected)::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      opacity: 0;
+      animation: nodePulse 2.8s ease-in-out infinite;
+    }
+
+    .node-dot { color: rgba(91,157,255,.4); }
+    .node-dot.hq { color: rgba(240,200,80,.4); }
+    .node-dot.bonus { color: rgba(32,200,112,.4); }
+
+    .stop-row.active .node-dot,
+    .stop-row:hover .node-dot {
+      transform: scale(1.18);
+      border-color: var(--blue-bright);
+      box-shadow: 0 0 18px rgba(91,157,255,.5);
+    }
+    .stop-row.active .node-dot.hq,
+    .stop-row:hover .node-dot.hq {
+      border-color: #f0c850;
+      box-shadow: 0 0 18px rgba(240,200,80,.5);
+    }
+    .stop-row.active .node-dot.bonus,
+    .stop-row:hover .node-dot.bonus {
+      border-color: #20c870;
+      box-shadow: 0 0 18px rgba(32,200,112,.5);
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { transform: scale(1); opacity: 0; }
+      50%       { transform: scale(1.5); opacity: 0.35; }
+    }
+
+    /* ── Connector lines (left/right of node) ── */
+    .stop-connector {
+      position: absolute;
+      top: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(91,157,255,.3), transparent);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .stop-row.left  .stop-connector { left: calc(50% + 26px); right: 28px; }
+    .stop-row.right .stop-connector { left: 28px; right: calc(50% + 26px); }
+
+    /* ── Slide-up drawer ── */
+    .cp-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(4,16,43,.5);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+    }
+    .cp-drawer-overlay.open { display: block; }
+
+    .cp-drawer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, #0a1840, #04102b);
+      border-top: 1px solid rgba(91,157,255,.3);
+      border-radius: 20px 20px 0 0;
+      padding: 20px 24px calc(env(safe-area-inset-bottom, 0px) + 24px);
+      z-index: 201;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(.16,1,.3,1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cp-drawer.open {
+      transform: translateY(0);
+    }
+
+    .drawer-handle {
+      width: 36px;
+      height: 4px;
+      background: rgba(91,157,255,.3);
+      border-radius: 2px;
+      margin: 0 auto 18px;
+    }
+
+    .drawer-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .drawer-emoji-lg {
+      font-size: 48px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .drawer-info { flex: 1; }
+
+    .drawer-name {
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .drawer-address {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .drawer-perk-box {
+      background: rgba(26,115,232,.1);
+      border: 1px solid rgba(91,157,255,.2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+
+    .drawer-perk-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--blue-bright);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .drawer-perk-text {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--white);
+    }
+
+    .drawer-meta {
+      display: flex;
+      gap: 20px;
+      margin-top: 14px;
+    }
+
+    .drawer-meta-item .label {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .drawer-meta-item .value {
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .drawer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: rgba(91,157,255,.1);
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--muted);
+      font-family: var(--font);
+    }
+
+    /* ── Street label ── */
+    .street-label {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(91,157,255,.35);
+      margin: 0 0 8px;
+      position: relative;
+    }
+
+    /* ── Legend ── */
+    .corridor-legend {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0 28px 20px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* ── Entrance / End caps ── */
+    .corridor-cap {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(91,157,255,.4);
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 0;
+    }
+
+    .corridor-cap-icon {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── Entry animation ── */
+    .stop-row {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: stopReveal 0.45s cubic-bezier(.16,1,.3,1) forwards;
+    }
+
+    @keyframes stopReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 </head>
 <body>
 
-<div class="map-header wrap">
+<div class="corridor-header wrap">
   <div class="eyebrow">Cookies DC × ATCHÉ</div>
-  <h1>U Street <span class="grad">Corridor Map</span></h1>
+  <h1>U Street <span class="grad">Corridor</span></h1>
+  <p class="corridor-sub">Tap any stop to see perks + scan for your stamp.</p>
 </div>
 
-<div id="map"></div>
-
-<div class="checkpoint-drawer selected-cp" id="drawer">
-  <div class="cp-info-row">
-    <span class="cp-emoji" id="drawer-emoji">🍪</span>
-    <div class="cp-details">
-      <div style="font-weight:800;font-size:16px;" id="drawer-name">Cookies DC</div>
-      <div style="font-size:11px;color:var(--muted);" id="drawer-address"></div>
-      <div style="font-size:12px;color:var(--muted);" id="drawer-perk"></div>
-    </div>
-    <div style="text-align:right;">
-      <div style="font-weight:800;font-size:18px;color:var(--blue-bright);" id="drawer-pts">+10</div>
-      <div style="font-size:11px;color:var(--muted);">pts</div>
-    </div>
+<!-- Legend -->
+<div class="corridor-legend">
+  <div class="legend-item">
+    <div class="legend-dot" style="background:#f0c850;"></div>
+    <span>HQ</span>
   </div>
-  <div class="flex-row mt-1">
-    <a href="#" class="btn btn-small btn-block" id="drawer-link">View Checkpoint →</a>
-    <button class="btn btn-ghost btn-small btn-block" id="drawer-scan">📷 Scan QR</button>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--blue-bright);"></div>
+    <span>Checkpoint</span>
   </div>
-  <div id="drawer-badge" class="mt-1 text-center"></div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:#20c870;"></div>
+    <span>Bonus +20pts</span>
+  </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Corridor timeline -->
+<div class="corridor-wrap" id="corridor-wrap">
+  <div class="street-spine"></div>
+  <!-- Stops injected by JS -->
+</div>
+
+<!-- Slide-up drawer overlay -->
+<div class="cp-drawer-overlay" id="drawer-overlay"></div>
+
+<!-- Slide-up drawer -->
+<div class="cp-drawer" id="cp-drawer">
+  <button class="drawer-close" id="drawer-close">✕</button>
+  <div class="drawer-handle"></div>
+  <div class="drawer-top">
+    <span class="drawer-emoji-lg" id="d-emoji">🍪</span>
+    <div class="drawer-info">
+      <div class="drawer-name" id="d-name">Cookies DC</div>
+      <div class="drawer-address" id="d-address"></div>
+    </div>
+  </div>
+
+  <div class="drawer-perk-box">
+    <div class="drawer-perk-label">Passport Perk</div>
+    <div class="drawer-perk-text" id="d-perk"></div>
+  </div>
+
+  <div class="drawer-meta">
+    <div class="drawer-meta-item">
+      <div class="label">Points</div>
+      <div class="value" id="d-pts" style="color:var(--blue-bright);">+10</div>
+    </div>
+    <div class="drawer-meta-item">
+      <div class="label">Type</div>
+      <div class="value" id="d-type" style="color:var(--muted);font-size:13px;margin-top:4px;"></div>
+    </div>
+    <div class="drawer-meta-item" id="d-status-wrap">
+      <div class="label">Status</div>
+      <div class="value" id="d-status" style="font-size:13px;margin-top:4px;color:var(--muted);"></div>
+    </div>
+  </div>
+
+  <div class="drawer-actions">
+    <a href="#" class="btn btn-small" id="d-link" style="flex:1;">View Checkpoint →</a>
+    <button class="btn btn-ghost btn-small" id="d-directions" style="flex:1;">📍 Directions</button>
+  </div>
+
+  <div id="d-collected-msg" class="hidden" style="text-align:center;margin-top:12px;font-size:13px;color:var(--blue-bright);font-weight:700;">
+    ✅ You've collected this stamp!
+  </div>
+</div>
+
 <script src="app.js"></script>
 <script>
-  // Checkpoint data — sourced from app.js CHECKPOINTS (falls back to inline if needed)
-  var mapCheckpoints = (typeof CHECKPOINTS !== 'undefined') ? CHECKPOINTS : [
-    {id:'cookies-dc',name:'Cookies DC',address:'1115 U St NW, Washington, DC 20009',lat:38.91720,lng:-77.02779,points:0,type:'hq',perk:'Registration & Redemption HQ',emoji:'🍪'},
-    {id:'whitlows',name:"Whitlow's",address:'901 U St NW, Washington, DC 20001',lat:38.91690,lng:-77.02449,points:10,type:'checkpoint',perk:'$5 appetizer menu',emoji:'🍔'},
-    {id:'service-bar',name:'Service Bar',address:'926-928 U St NW, Washington, DC 20001',lat:38.91700,lng:-77.02492,points:10,type:'checkpoint',perk:'Free side with any order',emoji:'🍹'},
-    {id:'oohs-and-ahhs',name:'Oohs & Ahhs',address:'1005 U St NW, Washington, DC 20001',lat:38.91708,lng:-77.02618,points:10,type:'checkpoint',perk:'Free dessert with entree',emoji:'🍽️'},
-    {id:'tipsy-hookah',name:'Tipsy Hookah Lounge',address:'1212 U St NW, Washington, DC 20009',lat:38.91715,lng:-77.02889,points:10,type:'checkpoint',perk:'Free tea with any hookah',emoji:'💨'},
-    {id:'pure',name:'Pure Lounge',address:'1326 U St NW, Washington, DC 20009',lat:38.91732,lng:-77.03124,points:10,type:'checkpoint',perk:'Free entry before 11pm',emoji:'🎵'},
-    {id:'1942-lounge',name:'1942 Lounge',address:'1344 U St NW, Washington, DC 20009',lat:38.91734,lng:-77.03156,points:10,type:'checkpoint',perk:'10% off first drink',emoji:'🥃'},
-    {id:'dna',name:'DNA Lounge',address:'1350 U St NW, Washington, DC 20009',lat:38.91737,lng:-77.03187,points:10,type:'checkpoint',perk:'Buy one get one half off',emoji:'🧬'},
-    {id:'chi-cha',name:'Chi-Cha Lounge',address:'1624 U St NW, Washington, DC 20009',lat:38.91682,lng:-77.03752,points:10,type:'checkpoint',perk:'10% off hookah + Finale',emoji:'🌙'},
-    {id:'bens',name:"Ben's Chili Bowl",address:'1213 U St NW, Washington, DC 20009',lat:38.91713,lng:-77.02881,points:20,type:'bonus',perk:'Free chili dog with any Half-Smoke — BONUS',emoji:'🌭'},
-    {id:'lincoln',name:'Lincoln Theatre',address:'1215 U St NW, Washington, DC 20009',lat:38.91718,lng:-77.02891,points:10,type:'checkpoint',perk:'Photo op at the marquee — post & tag to earn stamp',emoji:'🎭'}
-  ];
 
-  // Initialize map centered on U Street corridor
-  var map = L.map('map', {
-    zoomControl: true,
-    attributionControl: false,
-  }).setView([38.9171, -77.0300], 15);
+  const wrap = document.getElementById('corridor-wrap');
+  const overlay = document.getElementById('drawer-overlay');
+  const drawer = document.getElementById('cp-drawer');
+  let activeRow = null;
 
-  // Force Leaflet to recalculate container size after DOM settles
-  setTimeout(() => map.invalidateSize(), 100);
-
-  // Dark-themed tiles (CartoDB Dark Matter — no API key required)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    subdomains: 'abcd',
-    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
-  }).addTo(map);
-
-  // Locate button (top-right)
-  const LocateBtn = L.Control.extend({
-    options: { position: 'topright' },
-    onAdd: function() {
-      const btn = L.DomUtil.create('button', 'location-btn');
-      btn.innerHTML = '📍';
-      btn.title = 'Find my location';
-      btn.onclick = function(e) {
-        e.preventDefault();
-        map.locate({ setView: true, maxZoom: 17 });
-      };
-      return btn;
-    }
-  });
-  new LocateBtn().addTo(map);
-
-  // Fit-all button (top-left, as a proper Leaflet control)
-  const FitBtn = L.Control.extend({
-    options: { position: 'topleft' },
-    onAdd: function() {
-      const btn = L.DomUtil.create('button', 'location-btn');
-      btn.innerHTML = '🔲';
-      btn.title = 'Show all checkpoints';
-      btn.onclick = function(e) {
-        e.preventDefault();
-        map.fitBounds(mapCheckpoints.map(cp => [cp.lat, cp.lng]), { padding: [40, 40], maxZoom: 16 });
-      };
-      return btn;
-    }
-  });
-  new FitBtn().addTo(map);
-
-  // Build markers
-  const drawer = document.getElementById('drawer');
-
-  mapCheckpoints.forEach(cp => {
+  function openDrawer(cp) {
     const earned = userStamps.includes(cp.id);
-    const markerClass = cp.type === 'hq' ? 'hq' : cp.type === 'bonus' ? 'bonus' : '';
 
-    const icon = L.divIcon({
-      className: `custom-marker ${markerClass} ${earned ? 'collected' : ''}`,
-      html: earned ? '✅' : cp.emoji,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
-      popupAnchor: [0, -20],
-    });
+    document.getElementById('d-emoji').textContent = cp.emoji;
+    document.getElementById('d-name').textContent = cp.name;
+    document.getElementById('d-address').textContent = cp.address || '';
+    document.getElementById('d-perk').textContent = cp.perk;
+    document.getElementById('d-link').href = `checkpoint.html?id=${cp.id}`;
 
-    const popupContent = `
-      <div style="text-align:center;min-width:140px;">
-        <div style="font-size:24px;">${cp.emoji}</div>
-        <div style="font-weight:800;font-size:14px;margin-top:4px;">${cp.name}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px;">${cp.address || ''}</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">${cp.perk}</div>
-        <div style="font-weight:700;color:var(--blue-bright);margin-top:4px;">
-          ${cp.points > 0 ? '+' + cp.points + ' pts' : 'HQ'}
-          ${earned ? ' ✓ Collected' : ''}
-        </div>
-        <a href="checkpoint.html?id=${cp.id}" style="color:var(--blue-bright);font-size:11px;font-weight:700;">Details →</a>
+    const ptsEl = document.getElementById('d-pts');
+    if (cp.points > 0) {
+      ptsEl.textContent = `+${cp.points}`;
+      ptsEl.style.color = cp.type === 'bonus' ? '#20c870' : 'var(--blue-bright)';
+    } else {
+      ptsEl.textContent = 'HQ';
+      ptsEl.style.color = '#f0c850';
+    }
+
+    document.getElementById('d-type').textContent =
+      cp.type === 'hq' ? '🏠 HQ' : cp.type === 'bonus' ? '⭐ Bonus' : '📍 Stop';
+
+    const statusEl = document.getElementById('d-status');
+    const collectedMsg = document.getElementById('d-collected-msg');
+    if (earned) {
+      statusEl.textContent = 'Collected ✓';
+      statusEl.style.color = 'var(--blue-bright)';
+      collectedMsg.classList.remove('hidden');
+    } else {
+      statusEl.textContent = 'Not yet';
+      statusEl.style.color = 'var(--muted)';
+      collectedMsg.classList.add('hidden');
+    }
+
+    // Directions deep link — opens Apple Maps or Google Maps
+    document.getElementById('d-directions').onclick = () => {
+      const query = encodeURIComponent(cp.address || cp.name + ' Washington DC');
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const url = isIOS
+        ? `maps://maps.apple.com/?q=${query}`
+        : `https://maps.google.com/?q=${query}`;
+      window.open(url, '_blank');
+    };
+
+    overlay.classList.add('open');
+    drawer.classList.add('open');
+  }
+
+  function closeDrawer() {
+    overlay.classList.remove('open');
+    drawer.classList.remove('open');
+    if (activeRow) { activeRow.classList.remove('active'); activeRow = null; }
+  }
+
+  document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+  // Build corridor
+  CHECKPOINTS.forEach((cp, i) => {
+    const earned = userStamps.includes(cp.id);
+    const side = i % 2 === 0 ? 'left' : 'right';
+
+    const nodeClass = cp.type === 'hq' ? 'hq' : cp.type === 'bonus' ? 'bonus' : '';
+    const cardClass = cp.type === 'hq' ? 'hq-card' : cp.type === 'bonus' ? 'bonus-card' : '';
+    const ptsColor = cp.type === 'hq' ? 'gold' : cp.type === 'bonus' ? 'green' : 'blue';
+    const ptsLabel = cp.points > 0 ? `+${cp.points} pts` : 'HQ';
+
+    const row = document.createElement('div');
+    row.className = `stop-row ${side}`;
+    row.style.animationDelay = `${i * 0.07}s`;
+
+    row.innerHTML = `
+      <div class="stop-card ${cardClass} ${earned ? 'collected-card' : ''}">
+        <div class="stop-name">${cp.name}</div>
+        <div class="stop-perk">${cp.perk}</div>
+        <div class="stop-pts ${ptsColor}">${ptsLabel}</div>
+        ${earned ? '<div class="stop-collected-badge">✓ Stamped</div>' : ''}
       </div>
+      <div class="stop-node">
+        <div class="node-dot ${nodeClass} ${earned ? 'collected' : ''}">${earned ? '✅' : cp.emoji}</div>
+      </div>
+      <div class="stop-connector"></div>
     `;
 
-    const marker = L.marker([cp.lat, cp.lng], { icon }).addTo(map);
-    marker.bindPopup(popupContent);
-
-    marker.on('click', () => {
-      drawer.classList.add('active');
-      document.getElementById('drawer-emoji').textContent = cp.emoji;
-      document.getElementById('drawer-name').textContent = cp.name;
-      document.getElementById('drawer-address').textContent = cp.address || '';
-      document.getElementById('drawer-perk').textContent = cp.perk;
-      document.getElementById('drawer-pts').textContent = cp.points > 0 ? `+${cp.points}` : 'HQ';
-      document.getElementById('drawer-link').href = `checkpoint.html?id=${cp.id}`;
-
-      const badgeEl = document.getElementById('drawer-badge');
-      badgeEl.innerHTML = earned
-        ? `<span class="badge badge-gold">✓ Already collected</span>`
-        : `<span class="badge badge-blue">Not yet stamped</span>`;
-
-      document.getElementById('drawer-scan').onclick = async function() {
-        if (!isLoggedIn()) {
-          showToast('Register first!', 'error');
-          return;
-        }
-        if (earned) {
-          showToast('Already collected this stamp!', 'error');
-          return;
-        }
-        const result = await earnStamp(cp.id, cp.name, cp.points);
-        if (result.error) { showToast(result.error, 'error'); return; }
-        showToast(`+${cp.points} pts at ${cp.name}! 🎉`);
-        launchConfetti();
-        map.closePopup();
-      };
+    row.addEventListener('click', () => {
+      if (activeRow && activeRow !== row) activeRow.classList.remove('active');
+      row.classList.add('active');
+      activeRow = row;
+      openDrawer(cp);
     });
+
+    wrap.appendChild(row);
   });
 
-  // Show user location
-  map.on('locationfound', function(e) {
-    L.circleMarker(e.latlng, {
-      radius: 8,
-      fillColor: '#5b9dff',
-      color: '#fff',
-      weight: 2,
-      fillOpacity: 0.8,
-    }).addTo(map).bindPopup('You are here').openPopup();
-  });
-  map.on('locationerror', function() {
-    showToast("Can't find your location. Check your GPS permissions.", 'error');
-  });
+  // End cap
+  const endCap = document.createElement('div');
+  endCap.className = 'corridor-cap';
+  endCap.innerHTML = `<span class="corridor-cap-icon">🏁</span>Chi-Cha Finale`;
+  wrap.appendChild(endCap);
 
-  // Try to locate on load
-  setTimeout(() => map.locate({ setView: false, maxZoom: 17 }), 1500);
 </script>
 
 </body>
