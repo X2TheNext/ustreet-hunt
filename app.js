@@ -7,14 +7,14 @@
 const SUPABASE_URL = 'https://aayigsbmmdolvnicxacs.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_ofAZ_64cKZXJefM5nbbt3g_wNOoF5DC';
 
-let supabase;
+let _sb;
 
 function initSupabase() {
-  if (typeof supabase !== 'undefined' && supabase) return supabase;
+  if (_sb) return _sb;
   if (typeof window.supabase?.createClient === 'function') {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
-  return supabase;
+  return _sb;
 }
 
 // ── Session ──
