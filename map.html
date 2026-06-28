@@ -131,10 +131,10 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="app.js"></script>
 <script>
-  // Hardcoded checkpoint data (does not depend on app.js)
-  var CHECKPOINTS = [
+  // Checkpoint data — sourced from app.js CHECKPOINTS (falls back to inline if needed)
+  var mapCheckpoints = (typeof CHECKPOINTS !== 'undefined') ? CHECKPOINTS : [
     {id:'cookies-dc',name:'Cookies DC',address:'1115 U St NW, Washington, DC 20009',lat:38.91720,lng:-77.02779,points:0,type:'hq',perk:'Registration & Redemption HQ',emoji:'🍪'},
-    {id:'whitlows',name:\"Whitlow's\",address:'901 U St NW, Washington, DC 20001',lat:38.91690,lng:-77.02449,points:10,type:'checkpoint',perk:'$5 appetizer menu',emoji:'🍔'},
+    {id:'whitlows',name:"Whitlow's",address:'901 U St NW, Washington, DC 20001',lat:38.91690,lng:-77.02449,points:10,type:'checkpoint',perk:'$5 appetizer menu',emoji:'🍔'},
     {id:'service-bar',name:'Service Bar',address:'926-928 U St NW, Washington, DC 20001',lat:38.91700,lng:-77.02492,points:10,type:'checkpoint',perk:'Free side with any order',emoji:'🍹'},
     {id:'oohs-and-ahhs',name:'Oohs & Ahhs',address:'1005 U St NW, Washington, DC 20001',lat:38.91708,lng:-77.02618,points:10,type:'checkpoint',perk:'Free dessert with entree',emoji:'🍽️'},
     {id:'tipsy-hookah',name:'Tipsy Hookah Lounge',address:'1212 U St NW, Washington, DC 20009',lat:38.91715,lng:-77.02889,points:10,type:'checkpoint',perk:'Free tea with any hookah',emoji:'💨'},
@@ -142,8 +142,8 @@
     {id:'1942-lounge',name:'1942 Lounge',address:'1344 U St NW, Washington, DC 20009',lat:38.91734,lng:-77.03156,points:10,type:'checkpoint',perk:'10% off first drink',emoji:'🥃'},
     {id:'dna',name:'DNA Lounge',address:'1350 U St NW, Washington, DC 20009',lat:38.91737,lng:-77.03187,points:10,type:'checkpoint',perk:'Buy one get one half off',emoji:'🧬'},
     {id:'chi-cha',name:'Chi-Cha Lounge',address:'1624 U St NW, Washington, DC 20009',lat:38.91682,lng:-77.03752,points:10,type:'checkpoint',perk:'10% off hookah + Finale',emoji:'🌙'},
-    {id:'ebbitt',name:'Old Ebbitt Grill',address:'675 15th St NW, Washington, DC 20005',lat:38.89744,lng:-77.03318,points:20,type:'bonus',perk:'Late-night food til 2am',emoji:'🌟'},
-    {id:'wednesdays',name:'&Wednesdays Pop-up',address:'1115 U St NW, Washington, DC 20009',lat:38.91720,lng:-77.02779,points:10,type:'checkpoint',perk:'Limited-edition menu item at Cookies',emoji:'🎪'}
+    {id:'bens',name:"Ben's Chili Bowl",address:'1213 U St NW, Washington, DC 20009',lat:38.91713,lng:-77.02881,points:20,type:'bonus',perk:'Free chili dog with any Half-Smoke — BONUS',emoji:'🌭'},
+    {id:'lincoln',name:'Lincoln Theatre',address:'1215 U St NW, Washington, DC 20009',lat:38.91718,lng:-77.02891,points:10,type:'checkpoint',perk:'Photo op at the marquee — post & tag to earn stamp',emoji:'🎭'}
   ];
 
   // Initialize map centered on U Street corridor
@@ -152,12 +152,14 @@
     attributionControl: false,
   }).setView([38.9171, -77.0300], 15);
 
-  // Dark-themed tiles
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // Dark-themed tiles (CartoDB Dark Matter — no API key required)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 19,
+    subdomains: 'abcd',
+    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
   }).addTo(map);
 
-  // Add location button
+  // Locate button (top-right)
   const LocateBtn = L.Control.extend({
     options: { position: 'topright' },
     onAdd: function() {
@@ -173,16 +175,26 @@
   });
   new LocateBtn().addTo(map);
 
-  // Fit all button
-  const fitBtn = L.DomUtil.create('button', 'fit-btn');
-  fitBtn.innerHTML = '🔲'; fitBtn.title = 'Show all checkpoints';
-  fitBtn.onclick = () => map.fitBounds(CHECKPOINTS.map(cp => [cp.lat, cp.lng]), { padding: [40,40], maxZoom: 16 });
-  document.getElementById('map').parentNode.appendChild(fitBtn);
+  // Fit-all button (top-left, as a proper Leaflet control)
+  const FitBtn = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd: function() {
+      const btn = L.DomUtil.create('button', 'location-btn');
+      btn.innerHTML = '🔲';
+      btn.title = 'Show all checkpoints';
+      btn.onclick = function(e) {
+        e.preventDefault();
+        map.fitBounds(mapCheckpoints.map(cp => [cp.lat, cp.lng]), { padding: [40, 40], maxZoom: 16 });
+      };
+      return btn;
+    }
+  });
+  new FitBtn().addTo(map);
 
   // Build markers
   const drawer = document.getElementById('drawer');
 
-  CHECKPOINTS.forEach(cp => {
+  mapCheckpoints.forEach(cp => {
     const earned = userStamps.includes(cp.id);
     const markerClass = cp.type === 'hq' ? 'hq' : cp.type === 'bonus' ? 'bonus' : '';
 

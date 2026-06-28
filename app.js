@@ -24,14 +24,14 @@ let userStamps = [];
 let spinTokens = 0;
 
 function getSession() {
-  const raw = sessionStorage.getItem('ustreet_hunt_session');
+  const raw = localStorage.getItem('ustreet_hunt_session');
   if (!raw) return null;
   try { return JSON.parse(raw); } catch { return null; }
 }
 
 function setSession(user) {
   currentUser = user;
-  sessionStorage.setItem('ustreet_hunt_session', JSON.stringify(user));
+  localStorage.setItem('ustreet_hunt_session', JSON.stringify(user));
 }
 
 function clearSession() {
@@ -39,7 +39,7 @@ function clearSession() {
   userPoints = 0;
   userStamps = [];
   spinTokens = 0;
-  sessionStorage.removeItem('ustreet_hunt_session');
+  localStorage.removeItem('ustreet_hunt_session');
 }
 
 function isLoggedIn() {
@@ -56,7 +56,7 @@ async function sendOTP(phone) {
 }
 
 async function verifyOTP(token) {
-  const raw = sessionStorage.getItem('otp_phone');
+  const raw = localStorage.getItem('otp_phone');
   if (!raw) return { error: { message: 'No phone found. Please re-enter.' } };
   const phone = JSON.parse(raw);
 
@@ -240,8 +240,8 @@ const CHECKPOINTS = [
   { id: '1942-lounge', name: '1942 Lounge', address: '1344 U St NW, Washington, DC 20009', lat: 38.91734, lng: -77.03156, points: 10, type: 'checkpoint', perk: '10% off first drink', emoji: '🥃' },
   { id: 'dna', name: 'DNA Lounge', address: '1350 U St NW, Washington, DC 20009', lat: 38.91737, lng: -77.03187, points: 10, type: 'checkpoint', perk: 'Buy one get one half off', emoji: '🧬' },
   { id: 'chi-cha', name: 'Chi-Cha Lounge', address: '1624 U St NW, Washington, DC 20009', lat: 38.91682, lng: -77.03752, points: 10, type: 'checkpoint', perk: '10% off hookah + Finale venue', emoji: '🌙' },
-  { id: 'ebbitt', name: 'Old Ebbitt Grill', address: '675 15th St NW, Washington, DC 20005', lat: 38.89744, lng: -77.03318, points: 20, type: 'bonus', perk: 'Late-night food til 2am — BONUS stop', emoji: '🌟' },
-  { id: 'wednesdays', name: '&Wednesdays Pop-up', address: '1115 U St NW, Washington, DC 20009', lat: 38.91720, lng: -77.02779, points: 10, type: 'checkpoint', perk: 'Limited-edition menu item at Cookies HQ', emoji: '🎪' },
+  { id: 'bens', name: "Ben's Chili Bowl", address: '1213 U St NW, Washington, DC 20009', lat: 38.91713, lng: -77.02881, points: 20, type: 'bonus', perk: 'Free chili dog with any Half-Smoke purchase — BONUS stop', emoji: '🌭' },
+  { id: 'lincoln', name: 'Lincoln Theatre', address: '1215 U St NW, Washington, DC 20009', lat: 38.91718, lng: -77.02891, points: 10, type: 'checkpoint', perk: 'Photo op at the marquee — post & tag to earn stamp', emoji: '🎭' },
 ];
 
 function getCheckpoint(id) {
@@ -280,6 +280,13 @@ function launchConfetti() {
 
   document.body.appendChild(container);
   setTimeout(() => container.remove(), 2200);
+}
+
+// ── XSS-safe HTML escape ──
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = String(str || '');
+  return div.innerHTML;
 }
 
 // ── Toast ──

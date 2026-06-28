@@ -182,7 +182,7 @@
     sendOtpBtn.textContent = 'Sending...';
 
     const clean = raw.startsWith('+') ? raw : `+1${raw}`;
-    sessionStorage.setItem('otp_phone', JSON.stringify(clean));
+    localStorage.setItem('otp_phone', JSON.stringify(clean));
 
     const { error } = await sendOTP(raw);
     if (error) {
@@ -253,22 +253,19 @@
 
     showToast('Welcome to the hunt! 🍪');
     const user = getSession();
-    displayNameInput.value = user.display_name || '';
-    profileNameDisplay.textContent = `Hunter since ${new Date().toLocaleDateString()}`;
 
     // Send welcome SMS via Twilio Edge Function
-    const phoneRaw = sessionStorage.getItem('otp_phone');
+    const phoneRaw = localStorage.getItem('otp_phone');
     if (phoneRaw) {
       try {
         const phone = JSON.parse(phoneRaw);
-        const digits = phone.replace(/[^\\d]/g, '');
+        const digits = phone.replace(/[^\d]/g, '');
         sendWelcomeSMS(digits, user.display_name || 'Hunter');
-        showToast('Check your phone for the map link! 📱');
       } catch(e) { console.warn('Welcome SMS failed:', e); }
     }
 
-    otpScreen.classList.add('hidden');
-    profileScreen.classList.remove('hidden');
+    // Auto-advance to passport — no friction name prompt
+    setTimeout(() => { window.location.href = 'hunt.html'; }, 900);
   });
 
   // OTP auto-submit when 6 digits
