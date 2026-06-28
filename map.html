@@ -544,6 +544,7 @@
 
 <script src="app.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 
   const wrap = document.getElementById('corridor-wrap');
   const overlay = document.getElementById('drawer-overlay');
@@ -649,6 +650,7 @@
   endCap.innerHTML = `<span class="corridor-cap-icon">🏁</span>Chi-Cha Finale`;
   wrap.appendChild(endCap);
 
+}); // end DOMContentLoaded
 </script>
 
 </body>
