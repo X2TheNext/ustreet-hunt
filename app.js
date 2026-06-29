@@ -323,7 +323,7 @@ async function sendSMS(phoneDigits, message) {
 
 // ── Welcome SMS after registration ──
 async function sendWelcomeSMS(phoneDigits, hunterName) {
-  const msg = '🍪 Welcome to the U Street Hunt, ' + hunterName + '! Your digital passport is live. Explore the corridor, scan at every stop, earn points & win prizes. July 11-18. Map: https://ustreet-hunt.atcheofficial.com/map.html';
+  const msg = '🍪 Welcome to the U Street Passport, ' + hunterName + '! Your passport is live. Hit the corridor on July 11 — collect stamps, earn points, win prizes. Anchored at Cookies DC. Map: https://ustreet-hunt.atcheofficial.com/map.html';
   return sendSMS(phoneDigits, msg);
 }
 
