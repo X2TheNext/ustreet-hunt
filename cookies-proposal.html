@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookies DC × ATCHÉ — U Street Passport Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080e1a;
+    --bg2: #0d1627;
+    --gold: #c9a24b;
+    --gold2: #f0c96e;
+    --mint: #3fb6f0;
+    --white: #f0f4ff;
+    --muted: #6b7fa8;
+    --line: rgba(201,162,75,.18);
+    --green: #22c55e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; font-weight: 300; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 32px; }
+
+  /* HERO */
+  .hero { padding: 80px 0 56px; border-bottom: 1px solid var(--line); background: radial-gradient(ellipse 900px 400px at 50% -60px, rgba(201,162,75,.22), transparent 70%); }
+  .logo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+  .logo-chip { background: rgba(201,162,75,.12); border: 1px solid var(--line); border-radius: 40px; padding: 6px 16px; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+  .x { color: var(--muted); font-size: 14px; }
+  .hero h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 900; letter-spacing: -.02em; line-height: 1.02; }
+  .grad { background: linear-gradient(110deg, var(--gold), var(--gold2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .sub { font-size: 17px; color: #a8bce0; margin-top: 18px; max-width: 680px; font-weight: 400; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 28px; font-size: 13px; color: var(--muted); }
+  .meta-row b { color: var(--white); font-weight: 600; }
+
+  /* SECTIONS */
+  section { padding: 52px 0; border-bottom: 1px solid var(--line); }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -.01em; line-height: 1.1; }
+  .lead { font-size: 16px; color: #b0c4e8; margin-top: 12px; max-width: 720px; font-weight: 400; }
+
+  /* WHAT WE NEED GRID */
+  .need-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .need-card { background: var(--bg2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .need-card .icon { font-size: 28px; margin-bottom: 10px; }
+  .need-card h3 { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .need-card p { font-size: 14px; color: #8ea3c8; }
+  .need-card .tag { display: inline-block; margin-top: 10px; background: rgba(201,162,75,.12); border: 1px solid rgba(201,162,75,.25); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: .08em; }
+  .need-card.zero .tag { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.25); color: var(--green); }
+
+  /* BUDGET TABLE */
+  .budget-wrap { margin-top: 28px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  thead th { background: rgba(201,162,75,.08); padding: 14px 20px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  thead th:last-child { text-align: right; }
+  td { padding: 14px 20px; border-top: 1px solid var(--line); color: #c2d3ef; vertical-align: top; }
+  td.amt { text-align: right; font-weight: 700; color: var(--white); white-space: nowrap; }
+  td.note { font-size: 12px; color: var(--muted); padding-top: 4px; border-top: none; }
+  tr.total td { border-top: 2px solid var(--gold); padding-top: 16px; font-weight: 800; font-size: 16px; color: var(--white); }
+  tr.total td.amt { color: var(--gold2); font-size: 20px; }
+  tr.zero td.amt { color: var(--green); }
+
+  /* WHAT COOKIES GETS */
+  .gets-list { display: grid; gap: 14px; margin-top: 24px; }
+  .get-row { display: flex; gap: 14px; align-items: flex-start; }
+  .get-icon { flex: 0 0 40px; height: 40px; border-radius: 12px; background: rgba(201,162,75,.1); border: 1px solid var(--line); display: grid; place-items: center; font-size: 18px; }
+  .get-text h4 { font-size: 15px; font-weight: 700; color: var(--white); }
+  .get-text p { font-size: 13.5px; color: #8ea3c8; margin-top: 2px; }
+
+  /* TIMELINE */
+  .tl { display: grid; gap: 0; margin-top: 24px; }
+  .tl-row { display: grid; grid-template-columns: 110px 1fr; gap: 20px; padding: 16px 0; border-top: 1px solid var(--line); align-items: start; }
+  .tl-date { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: .06em; padding-top: 2px; }
+  .tl-body h4 { font-size: 14.5px; font-weight: 700; color: var(--white); }
+  .tl-body p { font-size: 13px; color: #8ea3c8; margin-top: 3px; }
+  .tl-row.today .tl-body h4 { color: var(--gold2); }
+
+  /* LONG TERM */
+  .scale-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+  .scale-card { background: var(--bg2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .scale-card .yr { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--mint); margin-bottom: 8px; }
+  .scale-card h4 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .scale-card p { font-size: 13px; color: #8ea3c8; }
+
+  /* APPROVE CTA */
+  .approve { background: linear-gradient(135deg, rgba(201,162,75,.15), rgba(201,162,75,.05)); border: 1px solid rgba(201,162,75,.35); border-radius: 20px; padding: 40px; text-align: center; margin: 52px 0; }
+  .approve h2 { font-size: clamp(24px, 4vw, 36px); }
+  .approve p { color: #a8bce0; margin-top: 10px; font-size: 15px; }
+  .approve-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+  .btn { display: inline-block; padding: 14px 32px; border-radius: 40px; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer; border: none; font-family: inherit; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: linear-gradient(110deg, var(--gold), var(--gold2)); color: #0a0e1a; }
+  .btn-ghost { background: transparent; border: 1px solid rgba(201,162,75,.4); color: var(--gold); }
+  .confirm-msg { display: none; margin-top: 20px; padding: 16px 24px; background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); border-radius: 12px; color: var(--green); font-weight: 600; font-size: 15px; }
+
+  /* STOPS PREVIEW */
+  .stops-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .stop-chip { background: var(--bg2); border: 1px solid var(--line); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: #b0c4e8; }
+  .stop-chip.hq { border-color: rgba(201,162,75,.5); color: var(--gold2); font-weight: 700; }
+  .stop-chip.bonus { border-color: rgba(63,182,240,.35); color: var(--mint); }
+
+  footer { padding: 36px 0 64px; text-align: center; color: var(--muted); font-size: 12px; }
+
+  @media (max-width: 640px) {
+    .need-grid { grid-template-columns: 1fr; }
+    .scale-grid { grid-template-columns: 1fr; }
+    .tl-row { grid-template-columns: 80px 1fr; }
+    .approve-actions { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="logo-row">
+      <div class="logo-chip">Cookies DC</div>
+      <span class="x">×</span>
+      <div class="logo-chip">ATCHÉ</div>
+    </div>
+    <h1>The U Street<br><span class="grad">Passport.</span></h1>
+    <p class="sub">A week-long corridor scavenger hunt anchored at Cookies DC — driving real foot traffic to 15 businesses, generating content, and making Cookies the undisputed heartbeat of U Street. Launches July 4.</p>
+    <div class="meta-row">
+      <div><b>Presented to</b> · James, Cookies DC</div>
+      <div><b>Produced by</b> · Xavier Snow, ATCHÉ</div>
+      <div><b>Connector</b> · Deuce</div>
+      <div><b>Launch</b> · July 4, 2026</div>
+    </div>
+  </div>
+</header>
+
+<!-- WHAT IS IT -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The concept</div>
+    <h2>Pokémon GO for U Street.</h2>
+    <p class="lead">Players register on their phone, get a digital passport, and spend the week hitting stops across the U Street corridor. Each business gives them a secret word — they enter it in the app, earn stamps and points, and compete on a live leaderboard. Cookies DC is home base: where you register, where you finish, where you redeem prizes.</p>
+    <p class="lead" style="margin-top:12px;">No permits. No infrastructure. No risk. Just a community moving through the corridor — and everyone benefits.</p>
+
+    <div class="stops-grid" style="margin-top:28px;">
+      <div class="stop-chip hq">🍪 Cookies DC — HQ</div>
+      <div class="stop-chip">🍽️ Oohs & Ahhs</div>
+      <div class="stop-chip">🍹 Service Bar</div>
+      <div class="stop-chip">🐔 Peruvian Brothers</div>
+      <div class="stop-chip">🍦 Jeni's Ice Cream</div>
+      <div class="stop-chip">🍪 Insomnia Cookies</div>
+      <div class="stop-chip">💨 Tipsy Hookah</div>
+      <div class="stop-chip">🥃 Whiskey Bar</div>
+      <div class="stop-chip">🏀 District Sports Bar</div>
+      <div class="stop-chip">🧬 DNA Lounge</div>
+      <div class="stop-chip">🎪 &Friends Saint Ex</div>
+      <div class="stop-chip">🌙 Chi-Cha Lounge</div>
+      <div class="stop-chip">🎭 Lincoln Theatre</div>
+      <div class="stop-chip bonus">🌭 Ben's Chili Bowl — BONUS</div>
+      <div class="stop-chip bonus">🌟 Ebees Corner Grill — BONUS</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE NEED FROM COOKIES -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What we need from Cookies</div>
+    <h2>The ask is light.</h2>
+    <p class="lead">This activation runs on ATCHÉ's infrastructure. What we need from Cookies is simple — and most of it costs nothing.</p>
+
+    <div class="need-grid">
+      <div class="need-card">
+        <div class="icon">📍</div>
+        <h3>Home Base Status</h3>
+        <p>Cookies DC is the official start and finish point. Every player registers here, every prize gets redeemed here. You become the reason people come to U Street that week.</p>
+        <span class="tag">Zero cost</span>
+      </div>
+      <div class="need-card">
+        <div class="icon">🏆</div>
+        <h3>Prize Sponsorship</h3>
+        <p>Top 3 leaderboard finishers win a Cookies prize package — merch, store credit, or product. You set the value. Even $150–300 in prizes creates serious competitive energy.</p>
+        <span class="tag">~$150–300</span>
+      </div>
+      <div class="need-card zero">
+        <div class="icon">📣</div>
+        <h3>One Social Post</h3>
+        <p>A single post from @cookiesdc announcing the Passport sends the activation to your entire audience. That's the ignition. Everything else follows from there.</p>
+        <span class="tag zero">Zero cost</span>
+      </div>
+      <div class="need-card zero">
+        <div class="icon">🔑</div>
+        <h3>Staff Briefing</h3>
+        <p>Your team needs to know one thing: the secret word for Cookies HQ. Players show the app, staff confirms. 5-minute briefing before launch is all it takes.</p>
+        <span class="tag zero">Zero cost</span>
+      </div>
+      <div class="need-card zero">
+        <div class="icon">📸</div>
+        <h3>Content Rights</h3>
+        <p>ATCHÉ documents everything — photos and video from the week. Cookies gets full rights to all content for use on socials, screens, or future marketing.</p>
+        <span class="tag zero">Zero cost</span>
+      </div>
+      <div class="need-card">
+        <div class="icon">🎯</div>
+        <h3>Brand Placement</h3>
+        <p>"Presented by Cookies DC" on the passport app, the sponsor page, and all ATCHÉ promotional materials for the activation. Your logo at the top of everything players see.</p>
+        <span class="tag">Zero cost</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUDGET -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Budget</div>
+    <h2>What this actually costs Cookies.</h2>
+    <p class="lead">ATCHÉ covers all tech, production, and operations. Cookies' only real spend is prizes — and that spend comes back in foot traffic and content.</p>
+
+    <div class="budget-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:55%">Item</th>
+            <th>Who covers it</th>
+            <th>Cost to Cookies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Passport app (built + hosted)</td>
+            <td style="color:#8ea3c8;">ATCHÉ</td>
+            <td class="amt zero" style="color:var(--green);">$0</td>
+          </tr>
+          <tr>
+            <td>Event production + coordination</td>
+            <td style="color:#8ea3c8;">ATCHÉ</td>
+            <td class="amt" style="color:var(--green);">$0</td>
+          </tr>
+          <tr>
+            <td>Photography + video coverage</td>
+            <td style="color:#8ea3c8;">ATCHÉ</td>
+            <td class="amt" style="color:var(--green);">$0</td>
+          </tr>
+          <tr>
+            <td>Social promotion + community outreach</td>
+            <td style="color:#8ea3c8;">ATCHÉ</td>
+            <td class="amt" style="color:var(--green);">$0</td>
+          </tr>
+          <tr>
+            <td>Sponsor page + outreach to corridor</td>
+            <td style="color:#8ea3c8;">ATCHÉ</td>
+            <td class="amt" style="color:var(--green);">$0</td>
+          </tr>
+          <tr>
+            <td><b style="color:var(--white);">Prize pool (top 3 players)</b><br><span style="font-size:12px;color:var(--muted);">Merch, store credit, or product — Cookies decides the value</span></td>
+            <td style="color:var(--gold2);font-weight:600;">Cookies DC</td>
+            <td class="amt">$150 – $300</td>
+          </tr>
+          <tr class="total">
+            <td colspan="2"><b>Total out-of-pocket for Cookies</b></td>
+            <td class="amt">$150 – $300</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-top:12px;">For context: a single sponsored post from a mid-tier influencer costs $500–2,000 and delivers zero foot traffic. This delivers players physically in your store, content you own, and a corridor story that runs all week.</p>
+  </div>
+</section>
+
+<!-- WHAT COOKIES GETS -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The return</div>
+    <h2>What Cookies walks away with.</h2>
+
+    <div class="gets-list">
+      <div class="get-row">
+        <div class="get-icon">🏠</div>
+        <div class="get-text">
+          <h4>You are the reason U Street moves that week</h4>
+          <p>Every player starts and ends at Cookies. Every sponsor mentions Cookies. Every post tags Cookies. You're not a participant — you're the anchor the whole thing revolves around.</p>
+        </div>
+      </div>
+      <div class="get-row">
+        <div class="get-icon">👥</div>
+        <div class="get-text">
+          <h4>Real foot traffic — not impressions</h4>
+          <p>Players have to physically visit stops to earn stamps. That means bodies in your store, not just eyeballs on a screen. The leaderboard creates competition that brings people back multiple times.</p>
+        </div>
+      </div>
+      <div class="get-row">
+        <div class="get-icon">📱</div>
+        <div class="get-text">
+          <h4>A content library that outlasts the week</h4>
+          <p>Professional photo + video from every day of the activation. Recap content. Player moments. All shot by ATCHÉ, all yours to keep and use however you want — for months after July 4.</p>
+        </div>
+      </div>
+      <div class="get-row">
+        <div class="get-icon">🤝</div>
+        <div class="get-text">
+          <h4>Proof you own the corridor</h4>
+          <p>14 other businesses on U Street participating in a Cookies-anchored activation is a statement. It's the kind of thing that gets written about, screenshotted, and remembered when Cookies opens its next DC location.</p>
+        </div>
+      </div>
+      <div class="get-row">
+        <div class="get-icon">🚀</div>
+        <div class="get-text">
+          <h4>First mover on a format that scales</h4>
+          <p>If this works in DC, the Passport goes to every city Cookies is in. Being the anchor for the inaugural run means you're in the origin story — and that relationship follows the platform wherever it grows.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Timeline</div>
+    <h2>This week, step by step.</h2>
+
+    <div class="tl">
+      <div class="tl-row today">
+        <div class="tl-date">Jun 28–29</div>
+        <div class="tl-body">
+          <h4>✅ James approves → we lock it in</h4>
+          <p>Confirmation from Cookies lets us announce publicly and brief the corridor businesses with Cookies' name behind it. Changes everything.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Jun 30–Jul 1</div>
+        <div class="tl-body">
+          <h4>Corridor outreach + sponsor confirmations</h4>
+          <p>ATCHÉ finalizes all 15 stops, briefs each business with their secret word, and gets signed off. Social teaser posts begin.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Jul 2–3</div>
+        <div class="tl-body">
+          <h4>Launch push + player registrations open</h4>
+          <p>Cookies posts, ATCHÉ posts, corridor businesses post. Registration link goes live. Leaderboard seeds. Players start signing up.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Jul 4 🎆</div>
+        <div class="tl-body">
+          <h4>Hunt goes live — Cookies is home base</h4>
+          <p>Players flood the corridor. ATCHÉ crew documents everything. Leaderboard runs live all day. Cookies staff knows the word, ready to welcome players.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Jul 5–10</div>
+        <div class="tl-body">
+          <h4>Week-long hunt continues</h4>
+          <p>Players keep collecting stamps. Daily leaderboard updates keep competition alive. Recap content drops mid-week to keep momentum.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Jul 11</div>
+        <div class="tl-body">
+          <h4>Hunt closes + Cookies Anniversary</h4>
+          <p>Winners redeem prizes at Cookies DC. Anniversary celebration becomes the closing event. Full recap video delivered to Cookies within 72 hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LONG TERM -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Beyond July</div>
+    <h2>Why this is the beginning, not a one-off.</h2>
+    <p class="lead">July 4 is the proof of concept. If it lands — and it will — the conversation changes.</p>
+
+    <div class="scale-grid">
+      <div class="scale-card">
+        <div class="yr">Year 1 — DC</div>
+        <h4>Quarterly Passport activations</h4>
+        <p>Every major Cookies DC moment — anniversary, collab drops, holiday — becomes a Passport activation. ATCHÉ handles everything. Cookies gets the community.</p>
+      </div>
+      <div class="scale-card">
+        <div class="yr">Year 2 — Multi-city</div>
+        <h4>Cookies × ATCHÉ in every market</h4>
+        <p>The Passport framework goes to every city Cookies operates in. DC built the model. Atlanta, LA, Chicago run the same play — Cookies as anchor everywhere.</p>
+      </div>
+      <div class="scale-card">
+        <div class="yr">Year 3 — Platform</div>
+        <h4>Official activation partner</h4>
+        <p>ATCHÉ becomes the go-to community activation infrastructure for Cookies nationally. Brand deals, content packages, corridor partnerships — built on what we start July 4.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROVE -->
+<div class="wrap">
+  <div class="approve">
+    <div class="eyebrow" style="text-align:center;">For James</div>
+    <h2>Ready to make U Street history?</h2>
+    <p>This activation costs Cookies DC less than a weekend social media boost. It delivers foot traffic, content, and a corridor narrative that no one else on U Street can claim. We launch July 4 — we just need your green light.</p>
+
+    <div class="approve-actions">
+      <button class="btn btn-gold" onclick="approve()">✅ I'm In — Let's Do It</button>
+      <a href="mailto:xavier@atcheofficial.com?subject=Cookies DC × ATCHÉ Passport — Questions" class="btn btn-ghost">Questions? Let's Talk →</a>
+    </div>
+    <div class="confirm-msg" id="confirm-msg">
+      🔥 Let's get it. Xavier will reach out within the hour to lock in details. July 4 is about to be legendary.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>ATCHÉ × Cookies DC · U Street Passport · July 4–11, 2026</p>
+    <p style="margin-top:6px;">Produced by Xavier Snow · <a href="mailto:xavier@atcheofficial.com" style="color:var(--gold);text-decoration:none;">xavier@atcheofficial.com</a> · @atcheofficial</p>
+  </div>
+</footer>
+
+<script>
+function approve() {
+  document.getElementById('confirm-msg').style.display = 'block';
+  // Send email notification
+  window.location.href = 'mailto:xavier@atcheofficial.com?subject=✅ APPROVED — Cookies DC × ATCHÉ Passport&body=James approved the proposal. Lock it in.';
+}
+</script>
+
+</body>
+</html>
