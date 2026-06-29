@@ -231,17 +231,21 @@ async function getUserRank() {
 
 // ── Checkpoints Data (Hardcoded for offline + fallback) ──
 const CHECKPOINTS = [
-  { id: 'cookies-dc', name: 'Cookies DC', address: '1115 U St NW, Washington, DC 20009', lat: 38.91720, lng: -77.02779, points: 0, type: 'hq', perk: 'Registration & Redemption HQ — Start & finish here', emoji: '🍪' },
-  { id: 'whitlows', name: "Whitlow's", address: '901 U St NW, Washington, DC 20001', lat: 38.91690, lng: -77.02449, points: 10, type: 'checkpoint', perk: '$5 appetizer menu with passport', emoji: '🍔' },
-  { id: 'service-bar', name: 'Service Bar', address: '926-928 U St NW, Washington, DC 20001', lat: 38.91700, lng: -77.02492, points: 10, type: 'checkpoint', perk: 'Free side with any order', emoji: '🍹' },
-  { id: 'oohs-and-ahhs', name: 'Oohs & Ahhs', address: '1005 U St NW, Washington, DC 20001', lat: 38.91708, lng: -77.02618, points: 10, type: 'checkpoint', perk: 'Free dessert with entree', emoji: '🍽️' },
-  { id: 'tipsy-hookah', name: 'Tipsy Hookah Lounge', address: '1212 U St NW, Washington, DC 20009', lat: 38.91715, lng: -77.02889, points: 10, type: 'checkpoint', perk: 'Free tea with any hookah', emoji: '💨' },
-  { id: 'pure', name: 'Pure Lounge', address: '1326 U St NW, Washington, DC 20009', lat: 38.91732, lng: -77.03124, points: 10, type: 'checkpoint', perk: 'Free entry before 11pm with passport', emoji: '🎵' },
-  { id: '1942-lounge', name: '1942 Lounge', address: '1344 U St NW, Washington, DC 20009', lat: 38.91734, lng: -77.03156, points: 10, type: 'checkpoint', perk: '10% off first drink', emoji: '🥃' },
-  { id: 'dna', name: 'DNA Lounge', address: '1350 U St NW, Washington, DC 20009', lat: 38.91737, lng: -77.03187, points: 10, type: 'checkpoint', perk: 'Buy one get one half off', emoji: '🧬' },
-  { id: 'chi-cha', name: 'Chi-Cha Lounge', address: '1624 U St NW, Washington, DC 20009', lat: 38.91682, lng: -77.03752, points: 10, type: 'checkpoint', perk: '10% off hookah + Finale venue', emoji: '🌙' },
-  { id: 'bens', name: "Ben's Chili Bowl", address: '1213 U St NW, Washington, DC 20009', lat: 38.91713, lng: -77.02881, points: 20, type: 'bonus', perk: 'Free chili dog with any Half-Smoke purchase — BONUS stop', emoji: '🌭' },
-  { id: 'lincoln', name: 'Lincoln Theatre', address: '1215 U St NW, Washington, DC 20009', lat: 38.91718, lng: -77.02891, points: 10, type: 'checkpoint', perk: 'Photo op at the marquee — post & tag to earn stamp', emoji: '🎭' },
+  { id: 'cookies-dc',    name: 'Cookies DC',                address: '1115 U St NW, Washington, DC 20009',    lat: 38.91720, lng: -77.02779, points: 0,  type: 'hq',        perk: 'Registration & Redemption HQ — Start & finish here',       emoji: '🍪' },
+  { id: 'oohs-and-ahhs',name: 'Oohs & Ahhs',               address: '1005 U St NW, Washington, DC 20001',    lat: 38.91708, lng: -77.02618, points: 10, type: 'checkpoint', perk: 'Free dessert with entree',                                  emoji: '🍽️' },
+  { id: 'service-bar',  name: 'Service Bar',                address: '926 U St NW, Washington, DC 20001',     lat: 38.91700, lng: -77.02492, points: 10, type: 'checkpoint', perk: 'Free side with any order',                                  emoji: '🍹' },
+  { id: 'peruvian',     name: 'Peruvian Brothers',          address: '1916 14th St NW, Washington, DC 20009', lat: 38.91860, lng: -77.03200, points: 10, type: 'checkpoint', perk: 'Free sauce upgrade with any order',                         emoji: '🐔' },
+  { id: 'jenis',        name: "Jeni's Ice Cream",           address: '1631 U St NW, Washington, DC 20009',    lat: 38.91683, lng: -77.03768, points: 10, type: 'checkpoint', perk: 'Free scoop with any purchase',                              emoji: '🍦' },
+  { id: 'insomnia',     name: 'Insomnia Cookies',           address: '2000 14th St NW, Washington, DC 20009', lat: 38.91920, lng: -77.03215, points: 10, type: 'checkpoint', perk: 'Free cookie with any order',                                emoji: '🍪' },
+  { id: 'tipsy-hookah', name: 'Tipsy Hookah Lounge',        address: '1212 U St NW, Washington, DC 20009',    lat: 38.91715, lng: -77.02889, points: 10, type: 'checkpoint', perk: 'Free tea with any hookah',                                  emoji: '💨' },
+  { id: 'pure',         name: 'Whiskey Bar',                address: '1326 U St NW, Washington, DC 20009',    lat: 38.91732, lng: -77.03124, points: 10, type: 'checkpoint', perk: 'Free entry before 11pm with passport',                      emoji: '🥃' },
+  { id: '1942-lounge',  name: 'District Sports Bar',        address: '1344 U St NW, Washington, DC 20009',    lat: 38.91734, lng: -77.03156, points: 10, type: 'checkpoint', perk: '10% off first drink',                                       emoji: '🏀' },
+  { id: 'dna',          name: 'DNA Lounge',                 address: '1350 U St NW, Washington, DC 20009',    lat: 38.91737, lng: -77.03187, points: 10, type: 'checkpoint', perk: 'Buy one get one half off',                                  emoji: '🧬' },
+  { id: 'saint-ex',     name: '&Friends Saint Ex Open Deck', address: '1337 14th St NW, Washington, DC 20005', lat: 38.90980, lng: -77.03180, points: 15, type: 'checkpoint', perk: 'Open deck access + signature cocktail discount',            emoji: '🎪' },
+  { id: 'chi-cha',      name: 'Chi-Cha Lounge',             address: '1624 U St NW, Washington, DC 20009',    lat: 38.91682, lng: -77.03752, points: 10, type: 'checkpoint', perk: '10% off hookah + Finale venue',                             emoji: '🌙' },
+  { id: 'bens',         name: "Ben's Chili Bowl",           address: '1213 U St NW, Washington, DC 20009',    lat: 38.91713, lng: -77.02881, points: 20, type: 'bonus',      perk: "Free chili dog with any Half-Smoke purchase — BONUS stop", emoji: '🌭' },
+  { id: 'ebees',        name: "Ebees Corner Grill",         address: '1841 7th St NW, Washington, DC 20001',  lat: 38.91520, lng: -77.02150, points: 20, type: 'bonus',      perk: 'Late-night food til 2am — BONUS stop',                     emoji: '🌟' },
+  { id: 'lincoln',      name: 'Lincoln Theatre',            address: '1215 U St NW, Washington, DC 20009',    lat: 38.91718, lng: -77.02891, points: 10, type: 'checkpoint', perk: 'Photo op at the marquee — post & tag to earn stamp',        emoji: '🎭' },
 ];
 
 function getCheckpoint(id) {

@@ -72,9 +72,9 @@
 <div id="auth-screen" class="wrap">
   <div class="auth-card card">
     <div class="text-center">
-      <div class="eyebrow">Step 1 of 2</div>
-      <div class="auth-title">Your <span class="grad">phone number</span></div>
-      <p style="font-size:14px;color:var(--muted);margin-top:6px;">We'll text you a 6-digit code. No password needed.</p>
+      <div id="auth-mode-label" class="eyebrow">Step 1 of 2</div>
+      <div id="auth-mode-title" class="auth-title">Your <span class="grad">phone number</span></div>
+      <p style="font-size:14px;color:var(--muted);margin-top:6px;" id="auth-mode-sub">We'll text you a 6-digit code. No password needed.</p>
     </div>
 
     <div class="input-group mt-2">
@@ -84,6 +84,11 @@
 
     <button class="btn btn-block mt-2" id="send-otp-btn">Send Code →</button>
     <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;">U.S. numbers only. Standard message rates may apply.</p>
+
+    <div class="text-center mt-2" style="border-top:1px solid rgba(255,255,255,.08);padding-top:16px;">
+      <p style="font-size:13px;color:var(--muted);">Already registered?</p>
+      <button class="btn btn-ghost btn-small mt-1" id="toggle-signin-btn">Sign In Instead →</button>
+    </div>
   </div>
 </div>
 
@@ -145,6 +150,21 @@
   const logoutBtn = document.getElementById('logout-btn');
 
   let resendTimer = null;
+  let isSignInMode = false;
+
+  // Toggle between Register and Sign In modes
+  const toggleSignInBtn = document.getElementById('toggle-signin-btn');
+  toggleSignInBtn.addEventListener('click', () => {
+    isSignInMode = !isSignInMode;
+    document.getElementById('auth-mode-label').textContent = isSignInMode ? 'Welcome back' : 'Step 1 of 2';
+    document.getElementById('auth-mode-title').innerHTML = isSignInMode
+      ? 'Sign <span class="grad">back in</span>'
+      : 'Your <span class="grad">phone number</span>';
+    document.getElementById('auth-mode-sub').textContent = isSignInMode
+      ? 'Enter the number you registered with.'
+      : "We'll text you a 6-digit code. No password needed.";
+    toggleSignInBtn.textContent = isSignInMode ? '← New registration' : 'Sign In Instead →';
+  });
 
   // Check if already logged in
   if (isLoggedIn()) {
