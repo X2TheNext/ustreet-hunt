@@ -97,12 +97,19 @@
       </div>
     </div>
 
-    <!-- Scan to earn -->
+    <!-- Earn stamp -->
     <div class="text-center mt-2">
-      <button class="btn" id="cp-scan-btn">📷 Scan QR to Earn Stamp</button>
-      <p style="font-size:12px;color:var(--muted);margin-top:8px;">Find the QR code at this checkpoint. Scan it to earn your stamp and points.</p>
+      <button class="btn" id="cp-scan-btn">🔑 Enter Secret Word</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;">Ask a staff member for today's secret word to earn your stamp.</p>
       <div id="cp-already-done" class="hidden" style="color:var(--blue-bright);font-weight:700;margin-top:8px;">
         ✅ You've already collected this stamp.
+      </div>
+      <!-- Secret word input (hidden until button clicked) -->
+      <div id="word-entry" class="hidden mt-2">
+        <input type="text" id="word-input" placeholder="Enter secret word..." maxlength="20"
+          style="text-align:center;text-transform:uppercase;letter-spacing:.1em;font-size:18px;font-weight:700;width:100%;padding:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;color:#fff;">
+        <button class="btn btn-block mt-1" id="word-submit-btn">Submit →</button>
+        <button class="btn btn-ghost btn-small mt-1" id="word-cancel-btn">Cancel</button>
       </div>
     </div>
 
@@ -161,62 +168,57 @@
       statusEl.style.color = 'var(--blue-bright)';
     }
 
-    // Scan handler
-    scanBtn.addEventListener('click', async () => {
-      if (earned) {
-        showToast('Already collected!', 'error');
-        return;
-      }
+    // Secret word handler
+    const wordEntry = document.getElementById('word-entry');
+    const wordInput = document.getElementById('word-input');
+    const wordSubmitBtn = document.getElementById('word-submit-btn');
+    const wordCancelBtn = document.getElementById('word-cancel-btn');
+
+    scanBtn.addEventListener('click', () => {
+      if (earned) { showToast('Already collected!', 'error'); return; }
       if (!isLoggedIn()) {
         showToast('Register first!', 'error');
         window.location.href = 'register.html';
         return;
       }
+      scanBtn.classList.add('hidden');
+      wordEntry.classList.remove('hidden');
+      wordInput.focus();
+    });
 
-      // For QR scanning with html5-qrcode, or fallback manual
-      if (typeof Html5Qrcode !== 'undefined') {
-        // Start scanner
-        scanBtn.textContent = 'Starting camera...';
-        const scanner = new Html5Qrcode('cp-scan-btn');
-        try {
-          const result = await scanner.start(
-            { facingMode: 'environment' },
-            { fps: 10, qrbox: 250 },
-            async (decodedText) => {
-              // QR should contain checkpoint ID
-              if (decodedText === cp.id || decodedText.includes(cp.id)) {
-                await scanner.stop();
-                const result = await earnStamp(cp.id, cp.name, cp.points);
-                if (result.error) { showToast(result.error, 'error'); return; }
-                showToast(`+${cp.points} pts at ${cp.name}! 🎉`);
-                launchConfetti();
-                location.reload();
-              }
-            },
-            () => {} // ignore scan errors
-          );
-        } catch (err) {
-          scanBtn.textContent = '📷 Scan QR to Earn Stamp';
-          // Fallback to manual
-          const confirm = await Promise.resolve(window.confirm('QR scanner failed. Manually confirm stamp at ' + cp.name + '?'));
-          if (confirm) {
-            const result = await earnStamp(cp.id, cp.name, cp.points);
-            if (result.error) { showToast(result.error, 'error'); return; }
-            showToast(`+${cp.points} pts at ${cp.name}! 🎉`);
-            launchConfetti();
-            location.reload();
-          }
-        }
-      } else {
-        // No scanner library loaded — manual confirm
-        const confirmed = confirm(`Confirm stamp at ${cp.name}? (+${cp.points} pts)`);
-        if (!confirmed) return;
-        const result = await earnStamp(cp.id, cp.name, cp.points);
-        if (result.error) { showToast(result.error, 'error'); return; }
-        showToast(`+${cp.points} pts at ${cp.name}! 🎉`);
-        launchConfetti();
-        location.reload();
+    wordCancelBtn.addEventListener('click', () => {
+      wordEntry.classList.add('hidden');
+      scanBtn.classList.remove('hidden');
+      wordInput.value = '';
+    });
+
+    wordSubmitBtn.addEventListener('click', async () => {
+      const entered = wordInput.value.trim().toUpperCase();
+      const correct = (cp.word || '').toUpperCase();
+      if (!entered) { showToast('Enter the secret word', 'error'); return; }
+      if (entered !== correct) {
+        showToast('Wrong word — ask a staff member!', 'error');
+        wordInput.value = '';
+        wordInput.focus();
+        return;
       }
+      wordSubmitBtn.disabled = true;
+      wordSubmitBtn.textContent = 'Claiming...';
+      const result = await earnStamp(cp.id, cp.name, cp.points);
+      if (result.error) {
+        showToast(result.error, 'error');
+        wordSubmitBtn.disabled = false;
+        wordSubmitBtn.textContent = 'Submit →';
+        return;
+      }
+      showToast(`+${cp.points} pts at ${cp.name}! 🎉`);
+      launchConfetti();
+      location.reload();
+    });
+
+    // Allow Enter key to submit
+    wordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') wordSubmitBtn.click();
     });
   }
 
