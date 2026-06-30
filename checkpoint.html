@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Checkpoint — U Street Hunt</title>
+  <title>Checkpoint — U Street Passport</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="U Street Hunt">
+  <meta name="apple-mobile-web-app-title" content="U Street Passport">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,6 +52,95 @@
       font-size: 18px;
       color: var(--white);
     }
+    /* Landmark stops */
+    .landmark-banner {
+      background: linear-gradient(135deg, rgba(240,180,40,.12), rgba(91,157,255,.08));
+      border: 1px solid rgba(240,180,40,.3);
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .landmark-banner .eyebrow {
+      color: #f0b428;
+      font-size: 10px;
+      letter-spacing: .14em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    /* Symbol challenge */
+    .symbol-quiz {
+      margin-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding-top: 18px;
+    }
+    .symbol-quiz-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #f0b428;
+      margin-bottom: 10px;
+    }
+    .symbol-quiz-q {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      color: var(--ice);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit;
+    }
+    .quiz-option:hover:not(:disabled) { background: rgba(91,157,255,.12); border-color: rgba(91,157,255,.3); }
+    .quiz-option.correct { background: rgba(32,200,112,.15); border-color: rgba(32,200,112,.5); color: #20c870; }
+    .quiz-option.wrong   { background: rgba(232,80,80,.1);  border-color: rgba(232,80,80,.3);  color: #e85050; }
+    .quiz-fact {
+      font-size: 13px;
+      color: #c2d5f5;
+      line-height: 1.55;
+      margin-top: 10px;
+      padding: 12px 14px;
+      background: rgba(91,157,255,.07);
+      border-radius: 10px;
+    }
+    .quiz-bonus-pts {
+      font-size: 14px;
+      color: #20c870;
+      font-weight: 800;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(32,200,112,.1);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .share-btn {
+      background: rgba(91,157,255,.15);
+      border: 1px solid rgba(91,157,255,.3);
+      border-radius: 10px;
+      color: var(--blue-bright);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .share-btn:hover { background: rgba(91,157,255,.25); }
   </style>
 </head>
 <body>
@@ -77,6 +166,14 @@
   </div>
 
   <div class="cp-card card mt-2">
+
+    <!-- Landmark banner (injected by JS if type === 'landmark') -->
+    <div id="landmark-banner" class="hidden landmark-banner">
+      <div class="eyebrow">🏛️ Cultural Landmark</div>
+      <div style="font-weight:700;font-size:15px;color:#f0b428;margin-top:4px;">No purchase required</div>
+      <div style="font-size:13px;color:#c2d5f5;margin-top:4px;">Walk up. Learn the history. Earn your stamp.</div>
+    </div>
+
     <div class="perk-box">
       <div style="font-size:11px;color:var(--blue-bright);font-weight:700;letter-spacing:.08em;margin-bottom:4px;">PASSPORT PERK</div>
       <div style="font-weight:700;font-size:18px;" id="cp-perk">Registration & Redemption HQ</div>
@@ -100,7 +197,7 @@
     <!-- Earn stamp -->
     <div class="text-center mt-2">
       <button class="btn" id="cp-scan-btn">🔑 Enter Secret Word</button>
-      <p style="font-size:12px;color:var(--muted);margin-top:8px;">Ask a staff member for today's secret word to earn your stamp.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;" id="cp-word-hint">Ask a staff member for today's secret word to earn your stamp.</p>
       <div id="cp-already-done" class="hidden" style="color:var(--blue-bright);font-weight:700;margin-top:8px;">
         ✅ You've already collected this stamp.
       </div>
@@ -111,6 +208,22 @@
         <button class="btn btn-block mt-1" id="word-submit-btn">Submit →</button>
         <button class="btn btn-ghost btn-small mt-1" id="word-cancel-btn">Cancel</button>
       </div>
+    </div>
+
+    <!-- Music history lore -->
+    <div id="cp-lore-section" class="hidden mt-2" style="background:rgba(91,157,255,.07);border:1px solid rgba(91,157,255,.15);border-radius:14px;padding:16px 18px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-bright);margin-bottom:8px;">🎵 U Street History</div>
+      <p id="cp-lore" style="font-size:13.5px;color:#c2d5f5;line-height:1.6;margin:0;"></p>
+    </div>
+
+    <!-- Symbol Challenge (landmarks only) -->
+    <div id="symbol-challenge" class="hidden symbol-quiz">
+      <div class="symbol-quiz-label">🎯 Symbol Challenge — Bonus +5 pts</div>
+      <div class="symbol-quiz-q" id="quiz-question"></div>
+      <div id="quiz-options"></div>
+      <div id="quiz-fact" class="quiz-fact hidden"></div>
+      <div id="quiz-bonus" class="quiz-bonus-pts hidden">+5 bonus points added! 🔥</div>
+      <button class="share-btn hidden" id="quiz-share-btn">📲 Share this fact on IG Stories →</button>
     </div>
 
     <div class="text-center mt-2" id="cp-sponsor-section" style="display:none;">
@@ -145,12 +258,28 @@
     document.getElementById('cp-perk').textContent = cp.perk;
     document.getElementById('cp-points').textContent = cp.points > 0 ? `+${cp.points} pts` : 'HQ';
     document.getElementById('cp-type-val').textContent = cp.type.toUpperCase();
-    // Set address
+
     const addrEl = document.getElementById('cp-address');
     if (addrEl && cp.address) addrEl.textContent = cp.address;
 
+    // Type badge
     const typeBadge = document.getElementById('cp-type');
-    typeBadge.textContent = cp.type === 'hq' ? '🏠 HQ' : cp.type === 'bonus' ? '⭐ BONUS' : '📍 Checkpoint';
+    if (cp.type === 'hq') typeBadge.textContent = '🏠 HQ';
+    else if (cp.type === 'bonus') typeBadge.textContent = '⭐ BONUS';
+    else if (cp.type === 'landmark') typeBadge.textContent = '🏛️ LANDMARK';
+    else typeBadge.textContent = '📍 Checkpoint';
+
+    // Landmark banner + word hint
+    if (cp.type === 'landmark') {
+      document.getElementById('landmark-banner').classList.remove('hidden');
+      document.getElementById('cp-word-hint').textContent = 'Find the landmark and look for the code. No purchase needed.';
+    }
+
+    // Show music history lore
+    if (cp.lore) {
+      document.getElementById('cp-lore').textContent = cp.lore;
+      document.getElementById('cp-lore-section').classList.remove('hidden');
+    }
 
     // Check if collected
     const earned = userStamps.includes(cp.id);
@@ -213,18 +342,125 @@
       }
       showToast(`+${cp.points} pts at ${cp.name}! 🎉`);
       launchConfetti();
-      location.reload();
+
+      // Show symbol challenge if landmark (after stamp earned)
+      if (cp.type === 'landmark' && cp.symbolChallenge) {
+        buildSymbolChallenge(cp.symbolChallenge, cp.id);
+        document.getElementById('symbol-challenge').classList.remove('hidden');
+        document.getElementById('symbol-challenge').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        setTimeout(() => location.reload(), 1200);
+      }
+
+      // Update UI inline without full reload
+      collectedBadge.classList.remove('hidden');
+      alreadyDone.classList.remove('hidden');
+      scanBtn.disabled = true;
+      scanBtn.classList.remove('hidden');
+      scanBtn.textContent = '✅ Stamp Collected';
+      wordEntry.classList.add('hidden');
+      statusEl.textContent = 'Collected';
+      statusEl.style.color = 'var(--blue-bright)';
     });
 
     // Allow Enter key to submit
     wordInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') wordSubmitBtn.click();
     });
+
+    // Show symbol challenge for already-collected landmarks
+    if (earned && cp.type === 'landmark' && cp.symbolChallenge) {
+      buildSymbolChallenge(cp.symbolChallenge, cp.id);
+      document.getElementById('symbol-challenge').classList.remove('hidden');
+    }
+  }
+
+  // ── Symbol Challenge Builder ──
+  let quizAnswered = false;
+  function buildSymbolChallenge(quiz, cpId) {
+    if (!quiz) return;
+    document.getElementById('quiz-question').textContent = quiz.question;
+    const optionsEl = document.getElementById('quiz-options');
+    optionsEl.innerHTML = '';
+
+    quiz.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt.label;
+      btn.addEventListener('click', () => {
+        if (quizAnswered) return;
+        quizAnswered = true;
+
+        // Style all buttons
+        quiz.options.forEach((o, j) => {
+          const b = optionsEl.children[j];
+          b.disabled = true;
+          if (o.correct) b.classList.add('correct');
+          else if (j === i && !o.correct) b.classList.add('wrong');
+        });
+
+        // Show fact
+        const factEl = document.getElementById('quiz-fact');
+        factEl.textContent = opt.fact;
+        factEl.classList.remove('hidden');
+
+        // Bonus points for correct answer
+        if (opt.correct) {
+          document.getElementById('quiz-bonus').classList.remove('hidden');
+          // Award 5 bonus points
+          earnStamp(cpId + '-quiz', 'Symbol Challenge Bonus', 5).catch(() => {});
+        }
+
+        // Show share button
+        const shareBtn = document.getElementById('quiz-share-btn');
+        shareBtn.classList.remove('hidden');
+        shareBtn.addEventListener('click', () => {
+          const shareText = `🏛️ ${cp.name} fact: ${opt.fact}\n\nLearned this on the U Street Passport — July 11, DC 🍪 #UStreetPassport #DCHistory`;
+          if (navigator.share) {
+            navigator.share({ text: shareText, url: 'https://ustreet-hunt.atcheofficial.com' })
+              .catch(() => copyToClipboard(shareText));
+          } else {
+            copyToClipboard(shareText);
+            showToast('Copied to clipboard — paste into IG! 📲');
+          }
+        });
+      });
+      optionsEl.appendChild(btn);
+    });
+  }
+
+  function copyToClipboard(text) {
+    try { navigator.clipboard.writeText(text); } catch(e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    showToast('Copied! Paste into Stories 📲');
   }
 
   // Load user data to check stamps
   if (isLoggedIn()) {
-    loadUserData();
+    loadUserData().then(() => {
+      // Re-check stamp status after data loads
+      if (cp && userStamps.includes(cp.id)) {
+        const collectedBadge = document.getElementById('cp-collected');
+        const alreadyDone = document.getElementById('cp-already-done');
+        const scanBtn = document.getElementById('cp-scan-btn');
+        const statusEl = document.getElementById('cp-status');
+        if (collectedBadge) collectedBadge.classList.remove('hidden');
+        if (alreadyDone) alreadyDone.classList.remove('hidden');
+        if (scanBtn) { scanBtn.disabled = true; scanBtn.textContent = '✅ Stamp Collected'; }
+        if (statusEl) { statusEl.textContent = 'Collected'; statusEl.style.color = 'var(--blue-bright)'; }
+        // Show symbol challenge for landmarks
+        if (cp.type === 'landmark' && cp.symbolChallenge) {
+          buildSymbolChallenge(cp.symbolChallenge, cp.id);
+          document.getElementById('symbol-challenge').classList.remove('hidden');
+        }
+      }
+    });
   }
 </script>
 

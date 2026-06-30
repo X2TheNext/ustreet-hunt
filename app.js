@@ -230,17 +230,84 @@ async function getUserRank() {
 }
 
 // ── Checkpoints Data (Hardcoded for offline + fallback) ──
+// Types: 'hq' | 'checkpoint' | 'bonus' | 'landmark'
+// Landmarks = free cultural stops, no purchase required, staff-verified or self-check QR
 const CHECKPOINTS = [
-  { id: 'cookies-dc',    name: 'Cookies DC',          address: '1115 U St NW, Washington, DC 20009', lat: 38.91720, lng: -77.02779, points: 0,  type: 'hq',        perk: 'Registration & Redemption HQ — Start & finish here',       emoji: '🍪', word: 'PASSPORT'  },
-  { id: 'jenis',         name: "Jeni's Ice Cream",    address: '1631 U St NW, Washington, DC 20009', lat: 38.91683, lng: -77.03768, points: 10, type: 'checkpoint', perk: 'Free scoop with any purchase',                              emoji: '🍦', word: 'SCOOP'     },
-  { id: 'chicken-rico',  name: 'Chicken Rico',        address: '1710 14th St NW, Washington, DC 20009', lat: 38.91780, lng: -77.03190, points: 10, type: 'checkpoint', perk: 'Free side with any order',                              emoji: '🐔', word: 'RICO'      },
-  { id: 'nellies',       name: "Nellie's Sports Bar", address: '900 U St NW, Washington, DC 20001',  lat: 38.91688, lng: -77.02430, points: 10, type: 'checkpoint', perk: '10% off your tab with passport',                           emoji: '🏳️‍🌈', word: 'NELLIE'    },
-  { id: '1942-lounge',   name: 'District Sports Bar', address: '1344 U St NW, Washington, DC 20009', lat: 38.91734, lng: -77.03156, points: 10, type: 'checkpoint', perk: '10% off first drink',                                       emoji: '🏀', word: 'GAME'      },
-  { id: 'tipsy-hookah',  name: 'Tipsy Hookah Lounge', address: '1212 U St NW, Washington, DC 20009', lat: 38.91715, lng: -77.02889, points: 10, type: 'checkpoint', perk: 'Free tea with any hookah',                                  emoji: '💨', word: 'SMOKE'     },
-  { id: 'oohs-and-ahhs', name: 'Oohs & Ahhs',        address: '1005 U St NW, Washington, DC 20001', lat: 38.91708, lng: -77.02618, points: 10, type: 'checkpoint', perk: 'Free dessert with entree',                                  emoji: '🍽️', word: 'COMFORT'   },
-  { id: 'spicy-water',   name: 'Spicy Water',         address: '1342 U St NW, Washington, DC 20009', lat: 38.91733, lng: -77.03150, points: 10, type: 'checkpoint', perk: 'Free drink on arrival with passport',                       emoji: '🌶️', word: 'SPICY'     },
-  { id: 'bens',          name: "Ben's Next Door",     address: '1211 U St NW, Washington, DC 20009', lat: 38.91712, lng: -77.02878, points: 20, type: 'bonus',      perk: "Free chili dog with any purchase — BONUS stop",            emoji: '🌭', word: 'HALFSMOKE' },
-  { id: 'chi-cha',       name: 'Chi-Cha Lounge',      address: '1624 U St NW, Washington, DC 20009', lat: 38.91682, lng: -77.03752, points: 15, type: 'checkpoint', perk: 'After party venue — free entry before midnight with passport', emoji: '🌙', word: 'FINALE'    },
+  // ── HQ ──
+  { id: 'cookies-dc',    name: 'Cookies DC',          address: '1115 U St NW, Washington, DC 20009',    lat: 38.91720, lng: -77.02779, points: 0,  type: 'hq',        perk: 'Registration & Redemption HQ — Start & finish here',            emoji: '🍪', word: 'PASSPORT',  lore: 'U Street has been called "The Black Broadway" since the 1920s. This block hosted Duke Ellington, Ella Fitzgerald, and Billie Holiday when segregation banned them from playing downtown. Cookies DC is carrying that legacy of Black excellence forward.' },
+
+  // ── Commercial Stops ──
+  { id: 'jenis',         name: "Jeni's Ice Cream",    address: '1631 U St NW, Washington, DC 20009',    lat: 38.91683, lng: -77.03768, points: 10, type: 'checkpoint', perk: 'Free scoop with any purchase',                                  emoji: '🍦', word: 'SCOOP',     lore: 'This stretch of U Street was the heart of DC\'s go-go scene in the \'80s. Bands like Trouble Funk and Chuck Brown & the Soul Searchers played venues within a few blocks of here — a sound born right on this corridor.' },
+  { id: 'chicken-rico',  name: 'Chicken Rico',        address: '1710 14th St NW, Washington, DC 20009', lat: 38.91780, lng: -77.03190, points: 10, type: 'checkpoint', perk: 'Free side with any order',                                      emoji: '🐔', word: 'RICO',      lore: '14th and U was ground zero for the 1968 riots after MLK\'s assassination. The community rebuilt itself here, block by block. Every business standing on this corner today is a testament to that resilience.' },
+  { id: 'nellies',       name: "Nellie's Sports Bar", address: '900 U St NW, Washington, DC 20001',     lat: 38.91688, lng: -77.02430, points: 10, type: 'checkpoint', perk: '10% off your tab with passport',                               emoji: '🏳️‍🌈', word: 'NELLIE',    lore: 'U Street has always been a corridor of radical acceptance. DC\'s LGBTQ+ community has been part of this neighborhood\'s fabric for decades — Nellie\'s is one of the anchors of that ongoing story.' },
+  { id: '1942-lounge',   name: 'District Sports Bar', address: '1344 U St NW, Washington, DC 20009',    lat: 38.91734, lng: -77.03156, points: 10, type: 'checkpoint', perk: '10% off first drink',                                           emoji: '🏀', word: 'GAME',      lore: 'The Lincoln Theatre, just down the block, was the premier Black entertainment venue in DC from the 1920s onward. Nat King Cole, Louis Armstrong, and Cab Calloway all performed there. This whole strip was the social center of Black DC.' },
+  { id: 'tipsy-hookah',  name: 'Tipsy Hookah Lounge', address: '1212 U St NW, Washington, DC 20009',   lat: 38.91715, lng: -77.02889, points: 10, type: 'checkpoint', perk: 'Free tea with any hookah',                                      emoji: '💨', word: 'SMOKE',     lore: 'Black Flag played shows near this corridor in the early \'80s when U Street was a punk and alternative music hub. Henry Rollins, who grew up in DC, was part of a scene that mixed with the neighborhood\'s funk and go-go roots in ways no other city ever replicated.' },
+  { id: 'oohs-and-ahhs', name: 'Oohs & Ahhs',         address: '1005 U St NW, Washington, DC 20001',   lat: 38.91708, lng: -77.02618, points: 10, type: 'checkpoint', perk: 'Free dessert with entree',                                      emoji: '🍽️', word: 'COMFORT',   lore: 'Soul food has always been the fuel of U Street. During the Great Migration, thousands of Black families from the South brought their cooking traditions to DC — the comfort food on this corridor is a living archive of that history.' },
+  { id: 'spicy-water',   name: 'Spicy Water',          address: '1342 U St NW, Washington, DC 20009',   lat: 38.91733, lng: -77.03150, points: 10, type: 'checkpoint', perk: 'Free drink on arrival with passport',                           emoji: '🌶️', word: 'SPICY',     lore: 'By the 1990s, U Street had become the center of DC\'s indie music and nightlife revival. Clubs like the 9:30 Club (nearby) and spaces on this corridor helped launch careers of artists who went on to define an era of American music.' },
+  { id: 'bens',          name: "Ben's Next Door",      address: '1211 U St NW, Washington, DC 20009',   lat: 38.91712, lng: -77.02878, points: 20, type: 'bonus',      perk: "Free chili dog with any purchase — BONUS stop",                emoji: '🌭', word: 'HALFSMOKE', lore: "Ben's Chili Bowl opened in 1958 and never closed — not during the riots, not during crack, not during COVID. Bill Cosby, Donnie Simpson, and Barack Obama have all eaten here. The Half-Smoke is not a meal. It\'s a monument." },
+  { id: 'chi-cha',       name: 'Chi-Cha Lounge',       address: '1624 U St NW, Washington, DC 20009',   lat: 38.91682, lng: -77.03752, points: 15, type: 'checkpoint', perk: 'After party venue — free entry before midnight with passport',   emoji: '🌙', word: 'FINALE',    lore: 'Duke Ellington was born just blocks from U Street in 1899. He grew up hearing the sounds of this neighborhood before he went on to define American jazz. Every time music plays on U Street, it echoes something he started.' },
+
+  // ── Cultural Landmark Stops (no purchase required — walk up, absorb, earn) ──
+  {
+    id: 'lincoln-theatre',
+    name: 'Lincoln Theatre',
+    address: '1215 U St NW, Washington, DC 20009',
+    lat: 38.91715, lng: -77.02898,
+    points: 15,
+    type: 'landmark',
+    perk: 'Stand here. This is where Black Broadway lived. Take the photo. Tag us.',
+    emoji: '🎭',
+    word: 'LINCOLN',
+    lore: 'Opened in 1922, the Lincoln Theatre was the crown jewel of "The Black Broadway." Duke Ellington, Cab Calloway, Ella Fitzgerald, Louis Armstrong, and Billie Holiday all performed on this stage during an era when segregation banned Black artists from performing downtown. The Lincoln was more than a venue — it was proof that Black culture didn\'t need white validation to be world-class. It closed in the \'70s, sat vacant for years, and was restored in 1994. It still stands. So does everything it represents.',
+    symbolChallenge: {
+      question: 'Which of these symbols is actually from DC?',
+      options: [
+        { label: 'Bad Brains lightning bolt ⚡', correct: true,  fact: '100% DC. Bad Brains formed in Washington DC in 1976. The lightning bolt became one of the most recognized symbols in punk/reggae history — born right here on this corridor.' },
+        { label: 'Nirvana smiley face 🙂',       correct: false, fact: 'That\'s Seattle, WA — not DC. Kurt Cobain drew it in 1991. Different coast, different scene.' },
+        { label: 'Black Flag bars 🟥',            correct: false, fact: 'Close — Black Flag was from Hermosa Beach, California. Though Henry Rollins, their most iconic singer, is from DC and brought the city\'s intensity to the band.' },
+      ]
+    }
+  },
+  {
+    id: 'bad-brains-corner',
+    name: 'Bad Brains Corner',
+    address: '1813 Columbia Rd NW (near U St corridor), Washington, DC 20009',
+    lat: 38.92200, lng: -77.03800,
+    points: 15,
+    type: 'landmark',
+    perk: 'Find the spot. Know the story. This is where DC hardcore was born.',
+    emoji: '⚡',
+    word: 'BADBRAINS',
+    lore: 'Bad Brains formed in Washington DC in 1976 — four Black teenagers who started as a jazz-fusion band and transformed into the most ferocious punk act on earth. They invented what would become hardcore punk, influenced the Beastie Boys, Red Hot Chili Peppers, and nearly every alternative band of the \'80s and \'90s. H.R.\'s stage dives were legendary. They were banned from venues. They didn\'t care. The Bad Brains lightning bolt is one of the most powerful symbols in music history — designed by a DC crew who refused to be put in a box. This is their city.',
+    symbolChallenge: {
+      question: 'Bad Brains were pioneers of what genre?',
+      options: [
+        { label: 'Hardcore punk / reggae fusion', correct: true,  fact: 'Correct. They invented the template for hardcore punk AND blended it with Rastafarian reggae. No band before or since has pulled that off at that level.' },
+        { label: 'Grunge',                         correct: false, fact: 'Grunge came from Seattle in the late \'80s/early \'90s — Pearl Jam, Nirvana, Soundgarden. Bad Brains predated and influenced it.' },
+        { label: 'Trap music',                     correct: false, fact: 'Trap originated in Atlanta in the early 2000s. Bad Brains were doing something completely different — and 25 years earlier.' },
+      ]
+    }
+  },
+  {
+    id: 'ellington-birthplace',
+    name: 'Duke Ellington Birthplace',
+    address: '2129 Ward Pl NW, Washington, DC 20037',
+    lat: 38.91370, lng: -77.04790,
+    points: 15,
+    type: 'landmark',
+    perk: 'Stand where genius began. Edward Kennedy Ellington was born in this neighborhood.',
+    emoji: '🎹',
+    word: 'DUKE',
+    lore: 'Edward Kennedy "Duke" Ellington was born on April 29, 1899, just blocks from U Street. He grew up on these streets, took piano lessons nearby, and absorbed the sound of Black DC before he went on to become one of the greatest composers in American history. He led his orchestra for over 50 years, wrote over 3,000 compositions, and transformed jazz into high art — all while never forgetting where he came from. The neighborhood shaped him. He shaped the world.',
+    symbolChallenge: {
+      question: 'Duke Ellington\'s hometown sound that shaped his music was:',
+      options: [
+        { label: 'DC\'s "Black Broadway" jazz scene', correct: true,  fact: 'Yes. U Street was the heart of DC\'s jazz world, and Ellington absorbed it as a child before becoming one of the genre\'s defining figures.' },
+        { label: 'New Orleans blues',                  correct: false, fact: 'New Orleans gave us a different lineage — Louis Armstrong, Jelly Roll Morton. Ellington\'s roots were DC through and through.' },
+        { label: 'Chicago gospel',                     correct: false, fact: 'Chicago\'s music scene was transformative, but Ellington\'s origin story starts here on U Street, not the South Side.' },
+      ]
+    }
+  },
 ];
 
 function getCheckpoint(id) {

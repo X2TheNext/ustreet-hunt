@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Outreach Guide — U Street Passport</title>
+  <meta name="description" content="Contact guide for U Street Passport business outreach. Scripts, talking points, and what to ask for at each stop.">
+  <meta name="theme-color" content="#04102b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #04102b;
+      --card: #0a1a3a;
+      --blue: #1a73e8;
+      --blue-bright: #5b9dff;
+      --gold: #f0b428;
+      --green: #20c870;
+      --white: #f4f8ff;
+      --ice: #c2d5f5;
+      --muted: #7a8ab0;
+      --line: rgba(255,255,255,.08);
+      --radius: 18px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(160deg, #081830 0%, #04102b 100%);
+      padding: 60px 20px 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--blue-bright);
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 900;
+      line-height: 1.08;
+      margin-bottom: 14px;
+    }
+    .grad { background: linear-gradient(90deg, #5b9dff, #9db8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gold-grad { background: linear-gradient(90deg, #f0b428, #ffd96e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p {
+      font-size: 16px;
+      color: var(--ice);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Nav tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 20px 20px 0;
+      max-width: 800px;
+      margin: 0 auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .2s;
+    }
+    .tab-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .tab-btn:hover:not(.active) { border-color: var(--blue-bright); color: var(--blue-bright); }
+
+    /* Content */
+    .wrap { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+    .section { margin-top: 32px; }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* Contact cards */
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--accent, var(--blue));
+      border-radius: 4px 0 0 4px;
+    }
+    .contact-card.hq::before { background: #f0b428; }
+    .contact-card.landmark::before { background: #f0b428; }
+    .contact-card.bonus::before { background: var(--green); }
+
+    .contact-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .contact-emoji { font-size: 32px; line-height: 1; flex-shrink: 0; }
+    .contact-meta { flex: 1; }
+    .contact-name { font-size: 18px; font-weight: 800; color: var(--white); }
+    .contact-addr { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .contact-type {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: rgba(91,157,255,.12);
+      color: var(--blue-bright);
+      margin-top: 6px;
+    }
+    .contact-type.landmark-type { background: rgba(240,180,40,.12); color: #f0b428; }
+    .contact-type.bonus-type { background: rgba(32,200,112,.12); color: var(--green); }
+    .contact-type.hq-type { background: rgba(240,180,40,.15); color: #f0b428; }
+
+    /* Script box */
+    .script-box {
+      background: rgba(91,157,255,.06);
+      border: 1px solid rgba(91,157,255,.14);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .script-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--blue-bright);
+      margin-bottom: 8px;
+    }
+    .script-text {
+      font-size: 14px;
+      color: var(--ice);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* Ask list */
+    .ask-list { list-style: none; margin-top: 10px; }
+    .ask-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 13.5px;
+      color: var(--ice);
+      line-height: 1.45;
+    }
+    .ask-list li:last-child { border-bottom: none; }
+    .ask-list li::before {
+      content: '→';
+      color: var(--blue-bright);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Status tracker */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+    .status-label { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .status-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .status-pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      transition: all .2s;
+    }
+    .status-pill.active-cold   { background: rgba(91,157,255,.15); color: var(--blue-bright); border-color: rgba(91,157,255,.3); }
+    .status-pill.active-yes    { background: rgba(32,200,112,.15); color: var(--green); border-color: rgba(32,200,112,.3); }
+    .status-pill.active-no     { background: rgba(232,80,80,.1); color: #e85050; border-color: rgba(232,80,80,.3); }
+    .status-pill.active-follow { background: rgba(240,180,40,.12); color: #f0b428; border-color: rgba(240,180,40,.3); }
+
+    /* Master script */
+    .master-script {
+      background: var(--card);
+      border: 1px solid rgba(91,157,255,.2);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .master-script h3 { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+
+    .script-step {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .step-desc { font-size: 13px; color: var(--ice); line-height: 1.55; }
+    .step-script {
+      font-size: 13px;
+      color: #c2d5f5;
+      font-style: italic;
+      background: rgba(91,157,255,.06);
+      border-left: 3px solid var(--blue-bright);
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    /* Info boxes */
+    .info-box {
+      background: rgba(240,180,40,.08);
+      border: 1px solid rgba(240,180,40,.2);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--ice);
+      line-height: 1.6;
+    }
+    .info-box strong { color: #f0b428; }
+
+    /* Copy btn */
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      float: right;
+      margin-top: -4px;
+      transition: all .2s;
+    }
+    .copy-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Progress overview */
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .progress-item {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .progress-emoji { font-size: 24px; }
+    .progress-name { font-size: 13px; font-weight: 700; color: var(--white); }
+    .progress-status { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--muted); flex-shrink: 0;
+    }
+    .dot.green { background: var(--green); }
+    .dot.yellow { background: #f0b428; }
+    .dot.red { background: #e85050; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+      background: #1a73e8; color: #fff; padding: 10px 20px; border-radius: 20px;
+      font-size: 14px; font-weight: 600; z-index: 999; animation: fadeToast .3s ease;
+    }
+    @keyframes fadeToast { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">🍪 U Street Passport · July 11, 2026</div>
+  <h1>Outreach <span class="grad">Guide</span></h1>
+  <p>Every script, ask, and talking point you need to lock in each stop before July 11. Know exactly what to say, what to ask for, and what the yes looks like.</p>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('script')">📋 Master Script</button>
+  <button class="tab-btn" onclick="showTab('stops')">📍 Stop by Stop</button>
+  <button class="tab-btn" onclick="showTab('landmarks')">🏛️ Landmarks</button>
+  <button class="tab-btn" onclick="showTab('tracker')">📊 Tracker</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ── TAB: MASTER SCRIPT ── -->
+  <div id="tab-script" class="tab-panel active section">
+    <div class="info-box">
+      <strong>The play:</strong> You're not selling ad space. You're inviting them into a cultural moment that's already happening on their block. They're not sponsoring you — they're being included in DC history. Lead with that energy.
+    </div>
+
+    <div class="master-script">
+      <h3>📞 Cold Outreach Script <span class="grad">(In-Person or Phone)</span></h3>
+
+      <div class="script-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">The Hook (10 seconds)</div>
+          <div class="step-script">"Hey, my name is Xavier. I'm the founder of ATCHÉ — I'm putting together a one-day cultural experience on U Street on July 11th called the U Street Passport. We're working with [nearby business] and a few other spots on the corridor. I'd love 3 minutes of your time."</div>
+        </div>
+      </div>
+
+      <div class="script-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">The Concept (30 seconds)</div>
+          <div class="step-script">"Basically — it's a scavenger hunt meets cultural corridor experience. Participants register on their phone, hit stops along U Street, collect stamps by entering a secret word from your staff, and compete on a live leaderboard for prizes. No app download needed — just a mobile site. We're expecting 150–300 people to walk this corridor in one day, July 11th."</div>
+        </div>
+      </div>
+
+      <div class="script-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Their Role (20 seconds)</div>
+          <div class="step-script">"For your business specifically — we'd list you as a checkpoint stop on the app and the map. Players who come through your door get a perk from you — something simple like a free side, 10% off, a free drink. In exchange you get foot traffic from every participant who's actively looking for your location."</div>
+        </div>
+      </div>
+
+      <div class="script-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Handle the "How much?" question</div>
+          <div class="step-desc">Businesses can participate two ways — product/perk only (free, just offer a deal) or paid sponsorship ($100+ for extra visibility, branding on the app, etc.).</div>
+          <div class="step-script">"There's actually no cash required to be a checkpoint stop. All we ask is that you offer passport holders a small perk when they check in — something you're comfortable with. We handle everything else: the tech, the marketing, the social push. We have a paid tier if you want your logo on the app and dedicated promo, but that's optional."</div>
+        </div>
+      </div>
+
+      <div class="script-step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">The Yes / Close</div>
+          <div class="step-script">"I can send you a one-pager with all the details. All I need from you today is — are you open on July 11th, and is there a perk you'd be comfortable offering? That's literally the only two things I need to get you on the map."</div>
+        </div>
+      </div>
+
+      <div class="script-step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title">If they say "let me think about it"</div>
+          <div class="step-script">"Totally understand. I'll text you the sponsor page right now — it has the full breakdown. We're finalizing the stop list this week so I want to lock you in before we close it. Can I follow up Thursday?"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📲 Text / DM Script (Instagram / iMessage)</div>
+      <div class="script-box">
+        <div class="script-label">Initial DM — Short Version <button class="copy-btn" onclick="copyText(this, 'dm-short')">Copy</button></div>
+        <div class="script-text" id="dm-short">Hey [Name]! I'm Xavier — founder of ATCHÉ. I'm organizing the U Street Passport on July 11th — a one-day cultural scavenger hunt anchored at Cookies DC. We're inviting select businesses on the corridor to be checkpoint stops. Participants earn points for walking in your door. No cash required — just a simple perk for passport holders. Interested? Can send the details in 2 mins.</div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Follow-Up DM (no response after 2 days) <button class="copy-btn" onclick="copyText(this, 'dm-follow')">Copy</button></div>
+        <div class="script-text" id="dm-follow">Hey, wanted to circle back on the U Street Passport. We've locked in [X] stops already and the leaderboard is live. July 11 is coming fast — takes 5 min to get your spot confirmed. Want me to drop by this week?</div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Email Subject Line Options</div>
+        <div class="script-text">
+          "U Street is throwing a party July 11 — want in?"<br>
+          "[Business name] + U Street Passport — your block, your moment"<br>
+          "150 people walking to your door on July 11 — 5 min to confirm"
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🚫 Objection Handling</div>
+      <ul class="ask-list">
+        <li><strong style="color:var(--white);">"We're busy on Saturdays."</strong> — That's exactly why we want you. Busy means traffic. Passport holders are coming in with intention — they're not random walk-ins, they're people who specifically came to your spot.</li>
+        <li><strong style="color:var(--white);">"How do we know the code won't get shared?"</strong> — Each word is unique to your location. The app validates against your specific secret word. If someone shares it, they're just advertising your spot — that's still a win.</li>
+        <li><strong style="color:var(--white);">"We don't do discounts."</strong> — The perk doesn't have to be a discount. It can be anything — a free water, a sticker, a branded cup, priority seating. Whatever's easy for you.</li>
+        <li><strong style="color:var(--white);">"What does ATCHÉ get out of it?"</strong> — Brand building. We're documenting everything for content. We're not charging the participants either. This is a cultural build — we make money through sponsors and future activations, not this event.</li>
+        <li><strong style="color:var(--white);">"We need to talk to the manager / owner."</strong> — Perfect. When can I come by to meet them? Or can I send you the one-pager to pass along?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── TAB: STOP BY STOP ── -->
+  <div id="tab-stops" class="tab-panel section">
+    <div class="info-box">
+      <strong>Approach tip:</strong> For each stop, the key ask is always the same — (1) confirm they're open July 11, (2) lock in their perk offer, (3) get a contact name and number. Don't overthink it.
+    </div>
+
+    <!-- Cookies DC -->
+    <div class="contact-card hq">
+      <div class="contact-header">
+        <div class="contact-emoji">🍪</div>
+        <div class="contact-meta">
+          <div class="contact-name">Cookies DC</div>
+          <div class="contact-addr">1115 U St NW — HQ & Finish Line</div>
+          <span class="contact-type hq-type">🏠 Event HQ — Already the Partner</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Status</div>
+        <div class="script-text">Primary partner. James (owner) has seen the proposal. This is HQ — registration, prize redemption, finish line. If James hasn't formally confirmed, this is the single most important yes to get first.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Confirmation that the proposal is approved (send cookies-proposal.html link)</li>
+        <li>Space for a small check-in table near entrance 4–10pm</li>
+        <li>Staff briefed on secret word "PASSPORT" — tell players at registration</li>
+        <li>Offer: first drink discount or merch credit for passport holders</li>
+        <li>Permission to use Cookies branding on sponsor materials</li>
+      </ul>
+    </div>
+
+    <!-- Jeni's -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🍦</div>
+        <div class="contact-meta">
+          <div class="contact-name">Jeni's Splendid Ice Creams</div>
+          <div class="contact-addr">1631 U St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Your Ask</div>
+        <div class="script-text">"We'd love to have you as a checkpoint stop. All we need is a simple perk for passport holders — we were thinking something like a free scoop with purchase. Your staff would give players the secret word 'SCOOP' when they check in."</div>
+      </div>
+      <ul class="ask-list">
+        <li>Confirm open July 11 (Saturday) — they almost certainly are</li>
+        <li>Lock in perk: free scoop with any purchase (or their alternative)</li>
+        <li>Brief one or two staff members on the word "SCOOP" — just verbal, takes 30 seconds</li>
+        <li>If interested in more: $250 Corridor Partner tier for logo on app</li>
+      </ul>
+    </div>
+
+    <!-- Chicken Rico -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🐔</div>
+        <div class="contact-meta">
+          <div class="contact-name">Chicken Rico</div>
+          <div class="contact-addr">1710 14th St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Approach</div>
+        <div class="script-text">Go in person during a slow hour (2–4pm weekday). Ask for the manager. Lead with the 14th & U history angle — they've been part of this community and this is a celebration of the block. Secret word: RICO.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: free side dish with any order (already pre-written in app)</li>
+        <li>One staff member briefed on "RICO"</li>
+        <li>Make sure they know players will be arriving in waves 4–10pm</li>
+      </ul>
+    </div>
+
+    <!-- Nellie's -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🏳️‍🌈</div>
+        <div class="contact-meta">
+          <div class="contact-name">Nellie's Sports Bar</div>
+          <div class="contact-addr">900 U St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Angle</div>
+        <div class="script-text">Nellie's is already a community anchor. Pitch it as community visibility. They host tons of events — this is additive, not a burden. Saturday is one of their biggest nights, so the pitch is: this sends them pre-qualified foot traffic early in the evening.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: 10% off tab (or house drink special for passport holders)</li>
+        <li>Word: NELLIE — easy for any bartender to remember</li>
+        <li>Round 1 or Round 2 prize opportunity (free hookah or free entry)</li>
+      </ul>
+    </div>
+
+    <!-- District Sports Bar -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🏀</div>
+        <div class="contact-meta">
+          <div class="contact-name">District Sports Bar</div>
+          <div class="contact-addr">1344 U St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop</span>
+        </div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: 10% off first drink with passport check-in</li>
+        <li>Word: GAME — fits the sports bar vibe perfectly</li>
+        <li>Great candidate for Round 1 prize (4–6pm window, first prize moment)</li>
+        <li>Ask if they want to co-brand the round prize: "Round 1 brought to you by District Sports Bar"</li>
+      </ul>
+    </div>
+
+    <!-- Tipsy Hookah -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">💨</div>
+        <div class="contact-meta">
+          <div class="contact-name">Tipsy Hookah Lounge</div>
+          <div class="contact-addr">1212 U St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Round 2 Prize Opportunity</div>
+        <div class="script-text">Tipsy is listed as the Round 2 prize venue — "Free hookah session at Tipsy." This is a meaningful prize. Their pitch: being the Round 2 prize destination means every leaderboard player is gunning to win a hookah session here. That's branding at scale.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: free tea with any hookah session (low cost, high value perception)</li>
+        <li>Word: SMOKE</li>
+        <li>Confirm they're willing to honor Round 2 prize winner (one free hookah session)</li>
+        <li>This could be a $250 Corridor Partner tier conversation</li>
+      </ul>
+    </div>
+
+    <!-- Oohs & Ahhs -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🍽️</div>
+        <div class="contact-meta">
+          <div class="contact-name">Oohs & Ahhs</div>
+          <div class="contact-addr">1005 U St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Soul Food Angle</div>
+        <div class="script-text">Oohs & Ahhs is a cultural institution. Lean hard into the soul food heritage in your pitch — the lore card in the app ties them to the Great Migration and Black culinary tradition. They should know that's how we're representing them.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: free dessert with entree (compelling, memorable)</li>
+        <li>Word: COMFORT</li>
+        <li>Show them the lore text — they'll appreciate the respect for their history</li>
+      </ul>
+    </div>
+
+    <!-- Spicy Water -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🌶️</div>
+        <div class="contact-meta">
+          <div class="contact-name">Spicy Water</div>
+          <div class="contact-addr">1342 U St NW</div>
+          <span class="contact-type">📍 Checkpoint Stop · Round 1 Prize</span>
+        </div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: free drink on arrival for passport holders</li>
+        <li>Word: SPICY</li>
+        <li>Listed as Round 1 prize destination — confirm they'll honor "free tab" for winner</li>
+        <li>Great for a $250 Corridor Partner deal given the prize placement</li>
+      </ul>
+    </div>
+
+    <!-- Ben's Next Door -->
+    <div class="contact-card bonus">
+      <div class="contact-header">
+        <div class="contact-emoji">🌭</div>
+        <div class="contact-meta">
+          <div class="contact-name">Ben's Next Door</div>
+          <div class="contact-addr">1211 U St NW — BONUS Stop</div>
+          <span class="contact-type bonus-type">⭐ Bonus Stop (+20 pts)</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">The Pitch</div>
+        <div class="script-text">Ben's is an institution. The half-smoke is a DC monument. The pitch here isn't about what they gain — it's about being included in a tribute to U Street's legacy. They should want to be in this. Approach the manager with that energy. Don't pitch this like a sponsorship. Pitch it like an honor.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: free chili dog with any purchase (bonus stop = bigger perk)</li>
+        <li>Word: HALFSMOKE — iconic, unmistakable</li>
+        <li>Bonus stop = 20 points (highest commercial stop) — players are specifically incentivized to visit</li>
+        <li>Read them the lore text when you pitch — it will land</li>
+      </ul>
+    </div>
+
+    <!-- Chi-Cha -->
+    <div class="contact-card">
+      <div class="contact-header">
+        <div class="contact-emoji">🌙</div>
+        <div class="contact-meta">
+          <div class="contact-name">Chi-Cha Lounge</div>
+          <div class="contact-addr">1624 U St NW — After Party Venue</div>
+          <span class="contact-type">📍 Finale Stop · Round 3 Prize</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">The Close</div>
+        <div class="script-text">Chi-Cha is the finale. You want the after party energy to flow here — everyone who finishes the passport ends at Chi-Cha. The pitch: "We're sending the whole crowd your way after 8pm. You're the finish line party." That's a strong value proposition for them.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Perk: free entry before midnight for passport holders</li>
+        <li>Word: FINALE</li>
+        <li>Round 3 prize venue — "Free entry + tab at Chi-Cha" — confirm they'll honor it</li>
+        <li>This is a natural $500 Presenting Sponsor conversation — they get the whole after party audience</li>
+        <li>Ask if they want to co-brand: "The U Street Passport After Party, hosted by Chi-Cha Lounge"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── TAB: LANDMARKS ── -->
+  <div id="tab-landmarks" class="tab-panel section">
+    <div class="info-box">
+      <strong>No permission needed for landmarks</strong> — these are public cultural stops. Players walk there, look for the landmark code (posted physically or shown at the location), and enter it in the app. You're documenting DC history, not asking anyone's permission.
+    </div>
+
+    <div class="contact-card landmark">
+      <div class="contact-header">
+        <div class="contact-emoji">🎭</div>
+        <div class="contact-meta">
+          <div class="contact-name">Lincoln Theatre</div>
+          <div class="contact-addr">1215 U St NW</div>
+          <span class="contact-type landmark-type">🏛️ Cultural Landmark · +15 pts</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Player Experience</div>
+        <div class="script-text">Players walk to the Lincoln Theatre, find the landmark marker (either a physical placard you place, a sign on the door, or a posted QR). They see the lore card about Black Broadway — Duke Ellington, Cab Calloway, Ella Fitzgerald — and answer the symbol challenge quiz. Word: LINCOLN.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Optional: contact Lincoln Theatre management to let them know — potential collaboration opportunity</li>
+        <li>Print a small passport marker or 4x6 card to post near the entrance</li>
+        <li>Symbol challenge: "Which symbol is actually from DC?" — Bad Brains ⚡ vs. Nirvana smiley</li>
+        <li>Shareworthy moment: players will photograph this stop for IG</li>
+      </ul>
+    </div>
+
+    <div class="contact-card landmark">
+      <div class="contact-header">
+        <div class="contact-emoji">⚡</div>
+        <div class="contact-meta">
+          <div class="contact-name">Bad Brains Corner</div>
+          <div class="contact-addr">Near U St corridor / Columbia Rd area</div>
+          <span class="contact-type landmark-type">🏛️ Cultural Landmark · +15 pts</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">The Story</div>
+        <div class="script-text">Bad Brains formed in DC in 1976 — four Black teenagers who invented hardcore punk. H.R., Dr. Know, Darryl Jenifer, Earl Hudson. They were banned from half the venues they tried to play. They didn't care. The Bad Brains lightning bolt is one of the most iconic symbols in music history, and it was born right here.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Place a passport marker at or near this location</li>
+        <li>Word: BADBRAINS — say it with the energy it deserves</li>
+        <li>Symbol challenge: "Bad Brains were pioneers of what genre?" — hardcore punk / reggae fusion</li>
+        <li>This is the most shareable moment on the route — market it as such</li>
+        <li>Consider reaching out to HR or Bad Brains management about acknowledgment / social co-sign</li>
+      </ul>
+    </div>
+
+    <div class="contact-card landmark">
+      <div class="contact-header">
+        <div class="contact-emoji">🎹</div>
+        <div class="contact-meta">
+          <div class="contact-name">Duke Ellington Birthplace</div>
+          <div class="contact-addr">Near 2129 Ward Pl NW</div>
+          <span class="contact-type landmark-type">🏛️ Cultural Landmark · +15 pts</span>
+        </div>
+      </div>
+      <div class="script-box">
+        <div class="script-label">Why This Matters</div>
+        <div class="script-text">Duke Ellington was born April 29, 1899, just blocks from U Street. He grew up hearing this neighborhood before he became one of the most important composers in American history — 3,000+ compositions, 50 years leading his orchestra. The man who made jazz an art form started right here.</div>
+      </div>
+      <ul class="ask-list">
+        <li>Place or post a passport marker at this corner</li>
+        <li>Word: DUKE</li>
+        <li>Symbol challenge: "Duke Ellington's hometown sound was…" — DC's Black Broadway jazz scene</li>
+        <li>Photo opp — players will want to mark this one. Design a caption prompt: "Standing where Duke started. #UStreetPassport"</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📌 Landmark Logistics</div>
+      <div class="script-box">
+        <div class="script-label">What you need to print / make</div>
+        <div class="script-text">
+          For each landmark stop, create a small physical marker — a 4x6 card or small printed sign — that says:<br><br>
+          "🏛️ U Street Passport — [Stop Name]<br>
+          You found it. Enter the code in the app to earn your stamp.<br>
+          Code: [WORD]"<br><br>
+          Laminate it if possible. Tape or zip-tie to a public surface near the landmark. Check on them the morning of July 11.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: TRACKER ── -->
+  <div id="tab-tracker" class="tab-panel section">
+    <div class="info-box">
+      <strong>Track your outreach progress below.</strong> Tap a status button to update. This saves to your browser — come back any time.
+    </div>
+
+    <div id="tracker-grid" class="progress-grid"></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div id="toast" style="display:none;" class="toast"></div>
+
+<script>
+  // ── Tab navigation ──
+  function showTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── Copy to clipboard ──
+  function copyText(btn, id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const text = el.textContent.trim();
+    try { navigator.clipboard.writeText(text); } catch(e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = 'Copy', 1800);
+    showToast('Copied to clipboard!');
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.style.display = 'none', 2200);
+  }
+
+  // ── Tracker ──
+  const STOPS = [
+    { id: 'cookies-dc',    name: 'Cookies DC',          emoji: '🍪', type: 'HQ' },
+    { id: 'jenis',         name: "Jeni's Ice Cream",    emoji: '🍦', type: 'Stop' },
+    { id: 'chicken-rico',  name: 'Chicken Rico',        emoji: '🐔', type: 'Stop' },
+    { id: 'nellies',       name: "Nellie's Sports Bar", emoji: '🏳️‍🌈', type: 'Stop' },
+    { id: '1942-lounge',   name: 'District Sports Bar', emoji: '🏀', type: 'Stop' },
+    { id: 'tipsy-hookah',  name: 'Tipsy Hookah Lounge', emoji: '💨', type: 'Stop' },
+    { id: 'oohs-and-ahhs', name: 'Oohs & Ahhs',         emoji: '🍽️', type: 'Stop' },
+    { id: 'spicy-water',   name: 'Spicy Water',          emoji: '🌶️', type: 'Stop' },
+    { id: 'bens',          name: "Ben's Next Door",      emoji: '🌭', type: 'Bonus' },
+    { id: 'chi-cha',       name: 'Chi-Cha Lounge',       emoji: '🌙', type: 'Finale' },
+    { id: 'lincoln',       name: 'Lincoln Theatre',      emoji: '🎭', type: 'Landmark' },
+    { id: 'badbrains',     name: 'Bad Brains Corner',    emoji: '⚡', type: 'Landmark' },
+    { id: 'ellington',     name: 'Duke Ellington',       emoji: '🎹', type: 'Landmark' },
+  ];
+
+  const STATUSES = [
+    { key: 'cold',   label: '❄️ Not contacted', cls: '' },
+    { key: 'yes',    label: '✅ Confirmed',      cls: 'active-yes' },
+    { key: 'follow', label: '📞 Following up',  cls: 'active-follow' },
+    { key: 'no',     label: '❌ Passed',         cls: 'active-no' },
+  ];
+
+  function loadStatus(id) {
+    return localStorage.getItem('outreach_' + id) || 'cold';
+  }
+  function saveStatus(id, status) {
+    localStorage.setItem('outreach_' + id, status);
+  }
+
+  function dotClass(status) {
+    if (status === 'yes') return 'green';
+    if (status === 'follow') return 'yellow';
+    if (status === 'no') return 'red';
+    return '';
+  }
+
+  function buildTracker() {
+    const grid = document.getElementById('tracker-grid');
+    grid.innerHTML = '';
+    STOPS.forEach(stop => {
+      const status = loadStatus(stop.id);
+      const statusObj = STATUSES.find(s => s.key === status) || STATUSES[0];
+      const item = document.createElement('div');
+      item.className = 'progress-item';
+      item.innerHTML = `
+        <div class="progress-emoji">${stop.emoji}</div>
+        <div style="flex:1">
+          <div class="progress-name">${stop.name}</div>
+          <div class="progress-status">${stop.type}</div>
+          <select class="status-select" data-id="${stop.id}" style="margin-top:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--ice);font-size:12px;font-weight:600;padding:4px 8px;cursor:pointer;font-family:inherit;width:100%;">
+            ${STATUSES.map(s => `<option value="${s.key}" ${s.key === status ? 'selected' : ''}>${s.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="dot ${dotClass(status)}" id="dot-${stop.id}"></div>
+      `;
+      grid.appendChild(item);
+    });
+
+    grid.querySelectorAll('.status-select').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const id = sel.dataset.id;
+        const val = sel.value;
+        saveStatus(id, val);
+        const dot = document.getElementById('dot-' + id);
+        dot.className = 'dot ' + dotClass(val);
+        showToast('Status updated!');
+      });
+    });
+  }
+
+  buildTracker();
+</script>
+
+</body>
+</html>
