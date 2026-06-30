@@ -127,6 +127,11 @@
       <input type="text" id="display-name-input" placeholder="Choose a display name" maxlength="24">
     </div>
 
+    <div class="input-group mt-1">
+      <label>Team Name <span style="font-weight:400;color:var(--muted);">(optional — match your crew)</span></label>
+      <input type="text" id="team-name-input" placeholder="e.g. HU Squad, Section 8, The Plug..." maxlength="24" style="text-transform:uppercase;">
+    </div>
+
     <div class="flex-row mt-2" style="justify-content:center;">
       <a href="hunt.html" class="btn">📘 Your Passport →</a>
       <button class="btn btn-ghost" id="logout-btn">Logout</button>
@@ -299,13 +304,27 @@
   displayNameInput.addEventListener('change', async () => {
     const name = displayNameInput.value.trim();
     if (!name || !currentUser) return;
-
     const sb = initSupabase();
     await sb.from('hunters').update({ display_name: name }).eq('id', currentUser.userId);
     currentUser.display_name = name;
     setSession(currentUser);
     showToast('Name updated! ✨');
   });
+
+  // Update team name
+  const teamNameInput = document.getElementById('team-name-input');
+  if (teamNameInput) {
+    // Pre-fill from localStorage
+    teamNameInput.value = localStorage.getItem('ustreet_team') || '';
+    teamNameInput.addEventListener('change', async () => {
+      const team = teamNameInput.value.trim().toUpperCase();
+      if (!currentUser) return;
+      localStorage.setItem('ustreet_team', team);
+      const sb = initSupabase();
+      await sb.from('hunters').update({ team_name: team || null }).eq('id', currentUser.userId);
+      showToast(team ? `Team set: ${team} 🏳️` : 'Removed from team');
+    });
+  }
 
   // Logout
   logoutBtn.addEventListener('click', () => {

@@ -3,42 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Leaderboard — U Street Hunt</title>
+  <title>Leaderboard — U Street Passport</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="U Street Hunt">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    .lb-header {
-      text-align: center;
-      padding: 40px 0 16px;
-    }
-    .lb-list {
+    /* ── ROUNDS ── */
+    .rounds-bar {
+      display: flex;
+      gap: 8px;
       max-width: 500px;
-      margin: 0 auto;
+      margin: 0 auto 20px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 40px;
+      padding: 4px;
     }
-    .lb-empty {
-      text-align: center;
-      padding: 40px;
+    .round-btn {
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 32px;
+      border: none;
+      background: transparent;
       color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s;
     }
-    .lb-you-card {
-      max-width: 500px;
-      margin: 20px auto 0;
+    .round-btn.active {
+      background: var(--blue);
+      color: #fff;
     }
-    .trophy { font-size: 20px; }
-    .refresh-hint {
+    .round-countdown {
       text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .round-countdown b { color: var(--blue-bright); }
+
+    /* ── TABS (solo / teams) ── */
+    .mode-tabs {
+      display: flex;
+      gap: 6px;
+      max-width: 500px;
+      margin: 0 auto 16px;
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s;
+    }
+    .mode-tab.active {
+      border-color: var(--blue-bright);
+      color: var(--blue-bright);
+      background: rgba(91,157,255,.1);
+    }
+
+    /* ── TEAM REGISTRATION ── */
+    .team-reg {
+      max-width: 500px;
+      margin: 0 auto 20px;
+      background: rgba(26,115,232,.1);
+      border: 1px solid rgba(91,157,255,.2);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    .team-reg h4 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+    .team-input-row { display: flex; gap: 8px; }
+    .team-input-row input {
+      flex: 1;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .team-input-row input::placeholder { color: var(--muted); }
+    .team-input-row button {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .team-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(91,157,255,.15);
+      border: 1px solid rgba(91,157,255,.25);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--blue-bright);
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    /* ── LEADERBOARD ROWS ── */
+    .lb-header { text-align: center; padding: 36px 0 16px; }
+    .lb-list { max-width: 500px; margin: 0 auto; }
+    .lb-empty { text-align: center; padding: 40px; color: var(--muted); }
+    .lb-you-card { max-width: 500px; margin: 16px auto 0; }
+
+    /* team row */
+    .lb-row.team-row .lb-name { font-size: 13px; }
+    .lb-row .team-tag {
+      font-size: 10px;
+      background: rgba(91,157,255,.15);
+      color: var(--blue-bright);
+      border-radius: 8px;
+      padding: 2px 7px;
+      font-weight: 700;
+      margin-left: 6px;
+      letter-spacing: .04em;
+    }
+    .lb-row .member-count {
       font-size: 11px;
       color: var(--muted);
-      margin-top: 16px;
+      margin-top: 2px;
     }
+
+    .refresh-hint { text-align: center; font-size: 11px; color: var(--muted); margin-top: 16px; }
+
+    /* ── ROUND PRIZE BANNER ── */
+    .prize-banner {
+      max-width: 500px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(201,162,75,.15), rgba(201,162,75,.05));
+      border: 1px solid rgba(201,162,75,.3);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .prize-banner .prize-icon { font-size: 24px; flex-shrink: 0; }
+    .prize-banner .prize-text h4 { font-size: 13px; font-weight: 700; color: #f0c96e; }
+    .prize-banner .prize-text p { font-size: 12px; color: var(--muted); margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -47,16 +173,53 @@
   <div class="lb-header">
     <span style="font-size:40px;">🏆</span>
     <h1 style="margin-top:4px;"><span class="grad">Leaderboard</span></h1>
-    <p class="sub" style="margin-top:6px;">Top hunters on the U Street corridor. Real-time.</p>
+    <p class="sub" style="margin-top:6px;">Live standings — July 11, 2026</p>
   </div>
 
+  <!-- ROUND SELECTOR -->
+  <div class="rounds-bar">
+    <button class="round-btn active" data-round="1" onclick="setRound(1)">Round 1</button>
+    <button class="round-btn" data-round="2" onclick="setRound(2)">Round 2</button>
+    <button class="round-btn" data-round="3" onclick="setRound(3)">Round 3</button>
+    <button class="round-btn" data-round="all" onclick="setRound('all')">Overall</button>
+  </div>
+  <div class="round-countdown" id="round-info">Round 1 · 4pm – 6pm · <b id="round-timer">Loading...</b></div>
+
+  <!-- ROUND PRIZE -->
+  <div class="prize-banner" id="prize-banner">
+    <div class="prize-icon">🎁</div>
+    <div class="prize-text">
+      <h4 id="prize-title">Round 1 Prize</h4>
+      <p id="prize-desc">Top player wins a free tab at Spicy Water</p>
+    </div>
+  </div>
+
+  <!-- SOLO / TEAMS TABS -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('solo')">👤 Solo</button>
+    <button class="mode-tab" onclick="setMode('teams')">👥 Teams</button>
+  </div>
+
+  <!-- TEAM REGISTRATION (shows when in teams mode + logged in) -->
+  <div class="team-reg hidden" id="team-reg">
+    <h4>🏳️ Your Team</h4>
+    <div id="team-current"></div>
+    <div class="team-input-row mt-1" id="team-join-row">
+      <input type="text" id="team-name-input" placeholder="Enter team name..." maxlength="24">
+      <button onclick="joinTeam()">Join / Create</button>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px;">Enter the same team name as your crew to group your points together.</p>
+  </div>
+
+  <!-- LEADERBOARD LIST -->
   <div class="lb-list" id="lb-list">
-    <div class="lb-empty">Loading leaderboard...</div>
+    <div class="lb-empty">Loading...</div>
   </div>
 
+  <!-- YOUR CARD -->
   <div class="lb-you-card card card-accent hidden" id="you-card">
     <div style="display:flex;align-items:center;gap:14px;">
-      <span class="trophy">📍</span>
+      <span style="font-size:20px;">📍</span>
       <div style="flex:1;">
         <div style="font-weight:800;font-size:16px;" id="you-name">You</div>
         <div style="font-size:12px;color:var(--muted);">Rank <span id="you-rank">—</span></div>
@@ -68,7 +231,7 @@
     </div>
   </div>
 
-  <div class="refresh-hint mt-2">Leaderboard updates live as stamps are earned.</div>
+  <div class="refresh-hint mt-2">Updates live as stamps are earned.</div>
 
   <div class="text-center mt-2 mb-2">
     <a href="hunt.html" class="btn btn-ghost btn-small">← Back to Passport</a>
@@ -77,80 +240,243 @@
 
 <script src="app.js"></script>
 <script>
+// ── ROUND CONFIG ──
+// Each round: start/end as 24h time on July 11, prize description
+const EVENT_DATE = '2026-07-11';
+const ROUNDS = [
+  { id: 1, label: 'Round 1', start: '16:00', end: '18:00', prize: 'Free tab at Spicy Water', prizeIcon: '🌶️', info: 'Round 1 · 4pm – 6pm' },
+  { id: 2, label: 'Round 2', start: '18:00', end: '20:00', prize: 'Free hookah session at Tipsy', prizeIcon: '💨', info: 'Round 2 · 6pm – 8pm' },
+  { id: 3, label: 'Round 3', start: '20:00', end: '22:00', prize: 'Free entry + tab at Chi-Cha', prizeIcon: '🌙', info: 'Round 3 · 8pm – 10pm' },
+  { id: 'all', label: 'Overall', start: '16:00', end: '22:00', prize: 'Cookies DC prize package — merch + store credit', prizeIcon: '🍪', info: 'Overall · Full day' },
+];
+
+let currentRound = 1;
+let currentMode = 'solo'; // 'solo' | 'teams'
+
+// Determine active round based on current time
+function getActiveRound() {
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  if (dateStr !== EVENT_DATE) return 1; // default outside event day
+  const hhmm = now.getHours() * 60 + now.getMinutes();
+  if (hhmm < 18 * 60) return 1;
+  if (hhmm < 20 * 60) return 2;
+  if (hhmm < 22 * 60) return 3;
+  return 'all';
+}
+
+function setRound(r) {
+  currentRound = r;
+  document.querySelectorAll('.round-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.round == r);
+  });
+  const cfg = ROUNDS.find(x => x.id === r) || ROUNDS[0];
+  document.getElementById('prize-title').textContent = cfg.label + ' Prize';
+  document.getElementById('prize-desc').textContent = cfg.prizeIcon + ' ' + cfg.prize;
+  document.getElementById('round-info').innerHTML = cfg.info + ' · <b id="round-timer"></b>';
+  updateTimer();
+  renderLeaderboard();
+}
+
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(m));
+  });
+  const teamReg = document.getElementById('team-reg');
+  if (m === 'teams' && isLoggedIn()) {
+    teamReg.classList.remove('hidden');
+    renderTeamStatus();
+  } else {
+    teamReg.classList.add('hidden');
+  }
+  renderLeaderboard();
+}
+
+// ── TIMER ──
+function updateTimer() {
+  const cfg = ROUNDS.find(x => x.id === currentRound);
+  if (!cfg) return;
+  const timerEl = document.getElementById('round-timer');
+  if (!timerEl) return;
+
+  const now = new Date();
+  const [eh, em] = cfg.end.split(':').map(Number);
+  const end = new Date(EVENT_DATE + 'T' + cfg.end + ':00');
+  const diff = end - now;
+
+  if (diff <= 0) {
+    timerEl.textContent = 'Round closed';
+    return;
+  }
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  timerEl.textContent = h > 0 ? `${h}h ${m}m left` : `${m}m ${s}s left`;
+}
+setInterval(updateTimer, 1000);
+
+// ── TEAM LOGIC (localStorage based) ──
+function getMyTeam() {
+  return localStorage.getItem('ustreet_team') || '';
+}
+function setMyTeam(name) {
+  localStorage.setItem('ustreet_team', name.trim().toUpperCase());
+}
+
+function renderTeamStatus() {
+  const team = getMyTeam();
+  const currentEl = document.getElementById('team-current');
+  const joinRow = document.getElementById('team-join-row');
+  if (team) {
+    currentEl.innerHTML = `<div class="team-badge">🏳️ ${escapeHTML(team)} <span style="cursor:pointer;opacity:.6;" onclick="leaveTeam()">✕</span></div>`;
+    joinRow.style.display = 'none';
+  } else {
+    currentEl.innerHTML = '<p style="font-size:13px;color:var(--muted);margin-bottom:8px;">You\'re not on a team yet.</p>';
+    joinRow.style.display = 'flex';
+  }
+}
+
+function joinTeam() {
+  const input = document.getElementById('team-name-input');
+  const name = input.value.trim();
+  if (!name) { showToast('Enter a team name', 'error'); return; }
+  setMyTeam(name);
+  // Also save to hunter profile in Supabase if logged in
+  const sb = initSupabase();
+  const session = getSession();
+  if (sb && session?.userId) {
+    sb.from('hunters').update({ team_name: name.toUpperCase() }).eq('id', session.userId);
+  }
+  showToast(`Joined team ${name.toUpperCase()}! 🏳️`);
+  renderTeamStatus();
+  renderLeaderboard();
+}
+
+function leaveTeam() {
+  localStorage.removeItem('ustreet_team');
+  const sb = initSupabase();
+  const session = getSession();
+  if (sb && session?.userId) {
+    sb.from('hunters').update({ team_name: null }).eq('id', session.userId);
+  }
+  renderTeamStatus();
+  renderLeaderboard();
+}
+
+// ── LEADERBOARD RENDER ──
+async function renderLeaderboard() {
   const lbList = document.getElementById('lb-list');
-  const youCard = document.getElementById('you-card');
+  lbList.innerHTML = '<div class="lb-empty">Loading...</div>';
 
-  async function renderLeaderboard() {
-    // Try loading from Supabase; fall back gracefully
-    let leaders = [];
-    try {
-      leaders = await getLeaderboard(25);
-    } catch(e) {
-      lbList.innerHTML = '<div class="lb-empty">Leaderboard loading — check back soon.</div>';
-      return;
-    }
-
-    if (!leaders.length) {
-      lbList.innerHTML = `
-        <div class="lb-empty">
-          <span style="font-size:40px;">👀</span>
-          <p style="margin-top:10px;">No hunters yet! Be the first to register and claim #1.</p>
-          <a href="register.html" class="btn btn-small mt-1">Register Now →</a>
-        </div>
-      `;
-      return;
-    }
-
-    lbList.innerHTML = '';
-
-    leaders.forEach((h, i) => {
-      let rankClass = '';
-      let prefix = '';
-      if (i === 0) { rankClass = 'gold'; prefix = '🥇 '; }
-      else if (i === 1) { rankClass = 'top'; prefix = '🥈 '; }
-      else if (i === 2) { rankClass = 'top'; prefix = '🥉 '; }
-
-      const isYou = currentUser && h.id === currentUser.userId;
-      const row = document.createElement('div');
-      row.className = `lb-row ${isYou ? 'you' : ''}`;
-      row.innerHTML = `
-        <div class="lb-rank ${rankClass}">${prefix}${i + 1}</div>
-        <div class="lb-name">${escapeHTML(h.display_name || 'Hunter')} ${isYou ? '⭐' : ''}</div>
-        <div class="lb-points">${h.total_points || 0}pts</div>
-      `;
-      lbList.appendChild(row);
-    });
-
-    // Show user's own rank if logged in
-    if (isLoggedIn()) {
-      // Find self in leaders
-      const selfIdx = leaders.findIndex(h => h.id === currentUser?.userId);
-      if (selfIdx >= 0) {
-        document.getElementById('you-name').textContent = currentUser.display_name;
-        document.getElementById('you-rank').textContent = `#${selfIdx + 1}`;
-        document.getElementById('you-points').textContent = leaders[selfIdx].total_points || 0;
-        youCard.classList.remove('hidden');
-      } else {
-        // Not in top 25 — show local points
-        document.getElementById('you-name').textContent = currentUser.display_name;
-        document.getElementById('you-rank').textContent = 'Outside top 25';
-        document.getElementById('you-points').textContent = userPoints;
-        youCard.classList.remove('hidden');
-      }
-    } else {
-      youCard.classList.add('hidden');
-    }
+  let leaders = [];
+  try {
+    leaders = await getLeaderboard(50);
+  } catch(e) {
+    lbList.innerHTML = '<div class="lb-empty">Leaderboard loading — check back soon.</div>';
+    return;
   }
 
-  renderLeaderboard();
+  if (!leaders.length) {
+    lbList.innerHTML = `
+      <div class="lb-empty">
+        <span style="font-size:40px;">👀</span>
+        <p style="margin-top:10px;">No hunters yet! Be the first to register and claim #1.</p>
+        <a href="register.html" class="btn btn-small mt-1">Register Now →</a>
+      </div>`;
+    return;
+  }
 
-  // Auto-refresh every 30s
-  setInterval(renderLeaderboard, 30000);
+  if (currentMode === 'teams') {
+    renderTeamsLeaderboard(leaders, lbList);
+  } else {
+    renderSoloLeaderboard(leaders, lbList);
+  }
 
-  // Refresh when becoming visible
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) renderLeaderboard();
+  // Your card
+  renderYouCard(leaders);
+}
+
+function renderSoloLeaderboard(leaders, container) {
+  container.innerHTML = '';
+  leaders.slice(0, 25).forEach((h, i) => {
+    let prefix = i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : i === 2 ? '🥉 ' : '';
+    const rankClass = i === 0 ? 'gold' : i < 3 ? 'top' : '';
+    const isYou = currentUser && h.id === currentUser.userId;
+    const teamTag = h.team_name ? `<span class="team-tag">${escapeHTML(h.team_name)}</span>` : '';
+    const row = document.createElement('div');
+    row.className = `lb-row ${isYou ? 'you' : ''}`;
+    row.innerHTML = `
+      <div class="lb-rank ${rankClass}">${prefix}${i + 1}</div>
+      <div class="lb-name">${escapeHTML(h.display_name || 'Hunter')}${teamTag} ${isYou ? '⭐' : ''}</div>
+      <div class="lb-points">${h.total_points || 0}pts</div>`;
+    container.appendChild(row);
   });
+}
+
+function renderTeamsLeaderboard(leaders, container) {
+  // Aggregate points by team
+  const teams = {};
+  leaders.forEach(h => {
+    const team = (h.team_name || '').trim().toUpperCase();
+    if (!team) return;
+    if (!teams[team]) teams[team] = { name: team, points: 0, members: [] };
+    teams[team].points += (h.total_points || 0);
+    teams[team].members.push(h.display_name || 'Hunter');
+  });
+
+  const sorted = Object.values(teams).sort((a, b) => b.points - a.points);
+
+  if (!sorted.length) {
+    container.innerHTML = `<div class="lb-empty">
+      <span style="font-size:32px;">🏳️</span>
+      <p style="margin-top:10px;">No teams yet — create one above and get your crew to join!</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  const myTeam = getMyTeam();
+  sorted.forEach((t, i) => {
+    let prefix = i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : i === 2 ? '🥉 ' : '';
+    const rankClass = i === 0 ? 'gold' : i < 3 ? 'top' : '';
+    const isMyTeam = myTeam && t.name === myTeam;
+    const row = document.createElement('div');
+    row.className = `lb-row team-row ${isMyTeam ? 'you' : ''}`;
+    row.innerHTML = `
+      <div class="lb-rank ${rankClass}">${prefix}${i + 1}</div>
+      <div class="lb-name">
+        🏳️ ${escapeHTML(t.name)} ${isMyTeam ? '⭐' : ''}
+        <div class="member-count">${t.members.length} hunter${t.members.length !== 1 ? 's' : ''} · ${t.members.slice(0,3).map(escapeHTML).join(', ')}${t.members.length > 3 ? '...' : ''}</div>
+      </div>
+      <div class="lb-points">${t.points}pts</div>`;
+    container.appendChild(row);
+  });
+}
+
+function renderYouCard(leaders) {
+  const youCard = document.getElementById('you-card');
+  if (!isLoggedIn()) { youCard.classList.add('hidden'); return; }
+  const selfIdx = leaders.findIndex(h => h.id === currentUser?.userId);
+  if (selfIdx >= 0) {
+    document.getElementById('you-name').textContent = currentUser.display_name;
+    document.getElementById('you-rank').textContent = `#${selfIdx + 1}`;
+    document.getElementById('you-points').textContent = leaders[selfIdx].total_points || 0;
+    youCard.classList.remove('hidden');
+  }
+}
+
+// ── INIT ──
+const activeRound = getActiveRound();
+setRound(activeRound);
+updateTimer();
+setInterval(() => {
+  updateTimer();
+  renderLeaderboard();
+}, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) renderLeaderboard();
+});
 </script>
 
 </body>
