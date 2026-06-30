@@ -65,27 +65,15 @@
   <div class="passport-top">
     <span style="font-size:56px;">📘</span>
     <h1 style="margin-top:8px;">Your <span class="grad">Passport</span></h1>
-    <p class="sub">Register to start collecting stamps and earning points across 11 U Street stops.</p>
+    <p class="sub">Register to start collecting stamps and earning points across 13 U Street stops.</p>
     <a href="register.html" class="btn mt-2">📲 Register Now →</a>
   </div>
 
-  <!-- Teaser: greyed locked stamp grid -->
-  <div style="position:relative;margin-top:24px;">
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:12px;opacity:0.28;pointer-events:none;user-select:none;">
-      <!-- Static preview of first 6 stamps locked -->
-      <div class="stamp"><span class="icon">🍪</span><span>Cookies DC</span></div>
-      <div class="stamp"><span class="icon">🍔</span><span>Whitlow's</span></div>
-      <div class="stamp"><span class="icon">🍹</span><span>Service Bar</span></div>
-      <div class="stamp"><span class="icon">🍽️</span><span>Oohs & Ahhs</span></div>
-      <div class="stamp"><span class="icon">💨</span><span>Tipsy Hookah</span></div>
-      <div class="stamp"><span class="icon">🎵</span><span>Pure Lounge</span></div>
-      <div class="stamp"><span class="icon">🥃</span><span>1942 Lounge</span></div>
-      <div class="stamp"><span class="icon">🧬</span><span>DNA Lounge</span></div>
-      <div class="stamp"><span class="icon">🌙</span><span>Chi-Cha</span></div>
-      <div class="stamp"><span class="icon">🌭</span><span>Ben's</span></div>
-      <div class="stamp"><span class="icon">🎭</span><span>Lincoln</span></div>
+  <!-- Teaser: greyed locked stamp grid (populated from CHECKPOINTS) -->
+  <div style="position:relative;margin-top:24px;" id="teaser-grid-wrap">
+    <div id="teaser-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:12px;opacity:0.28;pointer-events:none;user-select:none;">
+      <!-- Populated by JS from CHECKPOINTS -->
     </div>
-    <!-- Lock overlay -->
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
       <span style="font-size:40px;">🔒</span>
       <div style="font-weight:800;font-size:14px;color:var(--blue-bright);text-align:center;">Register to unlock your stamps</div>
@@ -97,6 +85,9 @@
   <div class="passport-top">
     <span style="font-size:28px;">👋</span>
     <h1 id="hunter-greeting" style="margin-top:4px;font-size:clamp(22px,5vw,30px);">Hunter</h1>
+    <div id="team-display" style="margin-top:6px;display:none;">
+      <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(91,157,255,.12);border:1px solid rgba(91,157,255,.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--blue-bright);">🏳️ <span id="team-name-display"></span></span>
+    </div>
 
     <div class="pts-ring mt-2">
       <span style="font-weight:800;font-size:36px;color:var(--blue-bright);" id="passport-points">0</span>
@@ -161,6 +152,17 @@
   const stampGrid = document.getElementById('stamp-grid');
   const quickCheckpoints = document.getElementById('quick-checkpoints');
 
+  // Build teaser grid from real CHECKPOINTS
+  const teaserGrid = document.getElementById('teaser-grid');
+  if (teaserGrid) {
+    CHECKPOINTS.forEach(cp => {
+      const s = document.createElement('div');
+      s.className = 'stamp';
+      s.innerHTML = `<span class="icon">${cp.emoji}</span><span>${cp.name}</span>`;
+      teaserGrid.appendChild(s);
+    });
+  }
+
   function render() {
     if (!isLoggedIn()) {
       loggedOutState.classList.remove('hidden');
@@ -176,6 +178,16 @@
     document.getElementById('passport-points').textContent = userPoints;
     document.getElementById('passport-stamps-count').textContent = `${userStamps.length} stamp${userStamps.length !== 1 ? 's' : ''}`;
 
+    // Team display
+    const teamDisplay = document.getElementById('team-display');
+    const teamNameDisplay = document.getElementById('team-name-display');
+    if (user.team_name && teamDisplay && teamNameDisplay) {
+      teamNameDisplay.textContent = user.team_name;
+      teamDisplay.style.display = 'block';
+    } else if (teamDisplay) {
+      teamDisplay.style.display = 'none';
+    }
+
     // Rank badge
     const total = CHECKPOINTS.length;
     let rankEmoji = '🌱';
@@ -185,7 +197,7 @@
     else if (userStamps.length >= 2) rankEmoji = '🏃';
     document.getElementById('rank-badge').textContent = rankEmoji;
 
-    // Progress bar
+    // Progress bar (out of 13 stops total)
     const pct = Math.round((userStamps.length / total) * 100);
     document.getElementById('progress-bar').style.width = pct + '%';
     document.getElementById('progress-text').textContent = `${userStamps.length}/${total}`;

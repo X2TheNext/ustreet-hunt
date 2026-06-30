@@ -1,1008 +1,575 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sponsor the U Street Hunt — July 11, 2026</title>
-<meta name="description" content="U Street businesses: join the corridor's first community scavenger hunt. Thousands of people walking the block, stopping at sponsors, spending money. Deadline July 4.">
-<meta property="og:title" content="Be a U Street Hunt Sponsor — July 11">
-<meta property="og:description" content="A week-long scavenger hunt that sends foot traffic directly to your door. Limited spots. Deadline July 4.">
-<meta name="theme-color" content="#070808">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root {
-  --black: #070808;
-  --ink: #0f1210;
-  --panel: #121512;
-  --panel2: #181d18;
-  --mint: #3FB6F0;
-  --mint-dim: rgba(63,182,240,.15);
-  --mint-line: rgba(63,182,240,.2);
-  --white: #f6f7f3;
-  --muted: #7a8a8e;
-  --gold: #c9a24b;
-  --gold-dim: rgba(201,162,75,.12);
-  --green: #3fc87a;
-  --rose: #e85c6a;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: var(--black); color: var(--white); font-family: 'Inter', sans-serif; line-height: 1.6; overflow-x: hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sponsor the U Street Passport — July 11, 2026</title>
+  <meta name="description" content="Be a checkpoint stop on the U Street Passport. July 11, 2026. 150–300 people walking to your door. Anchored by Cookies DC.">
+  <meta property="og:title" content="Sponsor the U Street Passport — July 11">
+  <meta property="og:description" content="One day. 13 stops. Hundreds of people walking to your door. Anchored by Cookies DC. Be on the map.">
+  <meta name="theme-color" content="#04102b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #04102b;
+      --card: #0a1a3a;
+      --card2: #0d2040;
+      --blue: #1a73e8;
+      --blue-bright: #5b9dff;
+      --gold: #f0b428;
+      --gold-dim: rgba(240,180,40,.12);
+      --green: #20c870;
+      --white: #f4f8ff;
+      --ice: #c2d5f5;
+      --muted: #7a8ab0;
+      --line: rgba(255,255,255,.08);
+      --radius: 18px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-/* ── ANIMATED BG ── */
-#bg-canvas {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  opacity: 0.55;
-}
-body > *:not(#bg-canvas) { position: relative; z-index: 1; }
+    /* ── NAV ── */
+    .sp-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(4,16,43,.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 28px;
+    }
+    .sp-nav-logo {
+      font-weight: 900; font-size: 14px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--white);
+    }
+    .sp-nav-logo span { color: var(--gold); }
+    .sp-nav-dead {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: #e85050; animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+    .sp-nav-cta {
+      background: var(--gold); color: #04102b;
+      font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+      padding: 9px 20px; border-radius: 8px; text-decoration: none;
+      transition: background .2s;
+    }
+    .sp-nav-cta:hover { background: #ffd06e; }
+    @media(max-width:600px){ .sp-nav-dead{display:none;} }
 
-/* ── SCROLL REVEAL ── */
-.reveal {
-  opacity: 0; transform: translateY(32px);
-  transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-left {
-  opacity: 0; transform: translateX(-32px);
-  transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
-}
-.reveal-left.visible { opacity: 1; transform: translateX(0); }
-.reveal-right {
-  opacity: 0; transform: translateX(32px);
-  transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
-}
-.reveal-right.visible { opacity: 1; transform: translateX(0); }
-.stagger > * {
-  opacity: 0; transform: translateY(24px);
-  transition: opacity 0.55s cubic-bezier(.16,1,.3,1), transform 0.55s cubic-bezier(.16,1,.3,1);
-}
-.stagger.visible > *:nth-child(1) { opacity:1;transform:none;transition-delay:0s; }
-.stagger.visible > *:nth-child(2) { opacity:1;transform:none;transition-delay:.08s; }
-.stagger.visible > *:nth-child(3) { opacity:1;transform:none;transition-delay:.16s; }
-.stagger.visible > *:nth-child(4) { opacity:1;transform:none;transition-delay:.24s; }
-.stagger.visible > *:nth-child(5) { opacity:1;transform:none;transition-delay:.32s; }
-.stagger.visible > *:nth-child(6) { opacity:1;transform:none;transition-delay:.40s; }
+    /* ── HERO ── */
+    .sp-hero {
+      background: linear-gradient(160deg, #081830 0%, #04102b 70%);
+      padding: 80px 28px 64px;
+      position: relative; overflow: hidden;
+    }
+    .sp-hero::before {
+      content:''; position:absolute; top:-20%; right:-10%; width:600px; height:600px;
+      background: radial-gradient(circle, rgba(26,115,232,.12) 0%, transparent 65%);
+      pointer-events:none;
+    }
+    .sp-hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+    .sp-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--blue-bright); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sp-eyebrow::before { content:''; width:28px; height:1px; background:var(--blue-bright); }
+    .sp-hero h1 {
+      font-size: clamp(36px, 7vw, 76px);
+      font-weight: 900; line-height: 1.0;
+      letter-spacing: -.02em; margin-bottom: 24px;
+    }
+    .sp-hero h1 .gold { color: var(--gold); }
+    .sp-hero p {
+      font-size: 17px; color: var(--ice); line-height: 1.75;
+      max-width: 580px; margin-bottom: 40px;
+    }
+    .sp-hero p strong { color: var(--white); }
 
-/* ── HERO ANIMATED TEXT ── */
-.hero h1 .word {
-  display: inline-block;
-  opacity: 0; transform: translateY(60px);
-  animation: wordUp 0.7s cubic-bezier(.16,1,.3,1) forwards;
-}
-.hero h1 .word:nth-child(1) { animation-delay: 0.1s; }
-.hero h1 .word:nth-child(2) { animation-delay: 0.2s; }
-.hero h1 .word:nth-child(3) { animation-delay: 0.3s; }
-.hero h1 .word:nth-child(4) { animation-delay: 0.4s; }
-@keyframes wordUp { to { opacity:1; transform:translateY(0); } }
+    /* Stats bar */
+    .sp-stats {
+      display: flex; gap: 0; flex-wrap: wrap;
+      border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+      max-width: 600px; margin-bottom: 40px;
+    }
+    .sp-stat {
+      flex: 1; min-width: 120px; padding: 18px 22px;
+      border-right: 1px solid var(--line);
+    }
+    .sp-stat:last-child { border-right: none; }
+    .sp-stat .num {
+      font-size: 30px; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, #fff 30%, var(--blue-bright));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .sp-stat .lbl { font-size: 11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
 
-.hero .kicker {
-  opacity: 0; animation: fadeIn 0.6s ease forwards 0.05s;
-}
-.hero .hero-sub {
-  opacity: 0; animation: fadeIn 0.8s ease forwards 0.6s;
-}
-.hero-stats {
-  opacity: 0; animation: fadeIn 0.8s ease forwards 0.8s;
-}
-.hero-dead {
-  opacity: 0; animation: fadeIn 0.8s ease forwards 1s;
-}
-@keyframes fadeIn { to { opacity:1; } }
+    /* Deadline badge */
+    .sp-deadline {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(232,80,80,.1); border: 1px solid rgba(232,80,80,.3);
+      border-radius: 10px; padding: 10px 18px;
+      font-size: 13px; font-weight: 700; color: #e85050;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
 
-/* ── GLOWING STAT NUMBERS ── */
-.hero-stat .num {
-  background: linear-gradient(135deg, #fff 30%, var(--mint));
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 12px rgba(63,182,240,.4));
-}
+    /* ── SECTIONS ── */
+    .sp-section { max-width: 820px; margin: 0 auto; padding: 64px 28px; border-top: 1px solid var(--line); }
+    .sp-section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .sp-section h2 { font-size: clamp(24px, 4vw, 40px); font-weight: 900; margin-bottom: 20px; line-height: 1.1; }
+    .sp-section .lead { font-size: 15px; color: var(--ice); line-height: 1.75; max-width: 640px; }
+    .sp-section .lead strong { color: var(--white); }
 
-/* ── ANIMATED CORRIDOR LINE ── */
-.corridor-visual {
-  width: 100%; padding: 60px 32px; max-width: 1080px; margin: 0 auto;
-  position: relative; overflow: hidden;
-}
-.corridor-track {
-  position: relative; height: 4px;
-  background: rgba(63,182,240,.12);
-  border-radius: 2px; margin: 40px 0;
-  overflow: visible;
-}
-.corridor-track-fill {
-  position: absolute; left: 0; top: 0; height: 100%; width: 0;
-  background: linear-gradient(90deg, var(--mint), var(--gold));
-  border-radius: 2px;
-  box-shadow: 0 0 16px rgba(63,182,240,.6);
-  transition: width 2s cubic-bezier(.16,1,.3,1);
-}
-.corridor-track.animate .corridor-track-fill { width: 100%; }
-.corridor-stops {
-  position: absolute; top: 50%; left: 0; right: 0;
-  transform: translateY(-50%);
-  display: flex; justify-content: space-between;
-}
-.c-stop {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--black); border: 2px solid rgba(63,182,240,.3);
-  transform: scale(0);
-  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), border-color 0.3s, box-shadow 0.3s;
-  position: relative;
-}
-.c-stop.lit {
-  border-color: var(--mint);
-  box-shadow: 0 0 12px rgba(63,182,240,.7);
-  transform: scale(1);
-}
-.c-stop.hq { border-color: var(--gold); box-shadow: 0 0 12px rgba(201,162,75,.7); }
-.c-stop .c-label {
-  position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
-  font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
-  color: var(--muted); white-space: nowrap;
-}
+    /* ── HOW IT WORKS ── */
+    .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 32px; }
+    .how-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 24px; transition: border-color .2s, transform .2s;
+    }
+    .how-card:hover { border-color: rgba(91,157,255,.35); transform: translateY(-3px); }
+    .how-card .icon { font-size: 28px; margin-bottom: 12px; display: block; }
+    .how-card h3 { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+    .how-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
-/* ── GLOW CARDS ── */
-.explainer-card, .tier, .biz-card, .del-card, .cookies-proof {
-  transition: border-color .3s, box-shadow .3s, transform .3s cubic-bezier(.16,1,.3,1);
-}
-.explainer-card:hover, .biz-card:hover, .del-card:hover {
-  border-color: rgba(63,182,240,.5) !important;
-  box-shadow: 0 0 32px -8px rgba(63,182,240,.2), 0 24px 48px -16px rgba(0,0,0,.5);
-  transform: translateY(-4px);
-}
-.tier:hover {
-  box-shadow: 0 0 48px -8px rgba(63,182,240,.25), 0 32px 64px -16px rgba(0,0,0,.6);
-  transform: translateY(-6px);
-}
-.tier.featured:hover {
-  box-shadow: 0 0 48px -8px rgba(201,162,75,.35), 0 32px 64px -16px rgba(0,0,0,.6);
-}
+    /* ── WHAT YOU GIVE / GET ── */
+    .give-get { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+    @media(max-width:580px){ .give-get{grid-template-columns:1fr;} }
+    .gg-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px;
+    }
+    .gg-card.get { border-color: rgba(91,157,255,.2); background: rgba(91,157,255,.05); }
+    .gg-label { font-size: 10px; font-weight: 700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+    .gg-label.blue { color: var(--blue-bright); }
+    .gg-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .gg-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--ice); line-height: 1.5; }
+    .gg-list li::before { content:'→'; color:var(--muted); flex-shrink:0; font-weight:700; }
+    .gg-list li.bold::before { content:'✓'; color:var(--blue-bright); }
 
-/* ── TICKER ── */
-.ticker-wrap {
-  overflow: hidden; border-top: 1px solid var(--mint-line); border-bottom: 1px solid var(--mint-line);
-  padding: 14px 0; background: rgba(63,182,240,.03);
-}
-.ticker {
-  display: flex; gap: 0; width: max-content;
-  animation: ticker 28s linear infinite;
-}
-.ticker-item {
-  font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--muted); padding: 0 40px; white-space: nowrap;
-  display: flex; align-items: center; gap: 16px;
-}
-.ticker-item .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--mint); }
-@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    /* ── TIERS ── */
+    .tiers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+    .tier-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+      padding: 28px; display: flex; flex-direction: column;
+      transition: border-color .2s, transform .25s;
+    }
+    .tier-card:hover { border-color: rgba(91,157,255,.4); transform: translateY(-4px); }
+    .tier-card.gold-tier {
+      border-color: rgba(240,180,40,.35);
+      background: linear-gradient(160deg, rgba(240,180,40,.08), var(--card) 60%);
+    }
+    .tier-card.gold-tier:hover { border-color: rgba(240,180,40,.6); }
+    .tier-best {
+      display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gold);
+      background: rgba(240,180,40,.12); border-radius: 6px; padding: 3px 10px;
+      margin-bottom: 14px; align-self: flex-start;
+    }
+    .tier-name-label { font-size: 11px; font-weight: 700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+    .tier-price { font-size: 48px; font-weight: 900; line-height: 1; color: var(--white); margin-bottom: 6px; }
+    .tier-price sup { font-size: 22px; font-weight: 400; vertical-align: top; margin-top: 10px; display: inline-block; }
+    .tier-price .or-donate { font-size: 14px; font-weight: 700; color: var(--gold); display: block; margin-top: 4px; }
+    .tier-tagline { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 20px; }
+    .tier-divider { height: 1px; background: var(--line); margin-bottom: 18px; }
+    .tier-perks { list-style: none; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+    .tier-perks li { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .tier-perks li::before { content: '✓'; color: var(--blue-bright); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+    .tier-perks li.gold::before { content: '★'; color: var(--gold); }
+    .tier-perks li strong { color: var(--white); }
+    .tier-cta {
+      margin-top: 22px; display: block; text-align: center;
+      padding: 13px; border-radius: 12px; font-size: 12px; font-weight: 800; letter-spacing:.1em;
+      text-transform: uppercase; text-decoration: none;
+      border: 1px solid rgba(91,157,255,.3); color: var(--blue-bright); background: transparent;
+      transition: all .2s; cursor: pointer; font-family: inherit;
+    }
+    .tier-cta:hover { background: rgba(91,157,255,.12); border-color: var(--blue-bright); }
+    .tier-card.gold-tier .tier-cta { background: var(--gold); color: #04102b; border-color: var(--gold); }
+    .tier-card.gold-tier .tier-cta:hover { background: #ffd06e; }
 
-/* ── COUNTER ANIMATION ── */
-.count-up { display: inline-block; }
+    /* ── SPIN WHEEL DONATION CALLOUT ── */
+    .spin-callout {
+      background: linear-gradient(135deg, rgba(91,157,255,.1), rgba(26,115,232,.06));
+      border: 1px solid rgba(91,157,255,.2); border-radius: 16px;
+      padding: 28px 32px; margin-top: 32px;
+      display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;
+    }
+    .spin-callout-icon { font-size: 48px; flex-shrink: 0; }
+    .spin-callout-body { flex: 1; }
+    .spin-callout-body h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .spin-callout-body p { font-size: 14px; color: var(--ice); line-height: 1.65; }
+    .spin-callout-body p strong { color: var(--white); }
+    .wheel-preview {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;
+    }
+    .wheel-slot {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600;
+    }
 
-/* ── MISSION PARALLAX ── */
-.mission-block {
-  position: relative; overflow: hidden;
-}
-.mission-block::before {
-  content: '';
-  position: absolute; top: -60%; right: -10%; width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(63,182,240,.06) 0%, transparent 65%);
-  pointer-events: none;
-  animation: orb-float 8s ease-in-out infinite;
-}
-@keyframes orb-float {
-  0%,100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-30px) scale(1.1); }
-}
+    /* ── COOKIES ANCHOR ── */
+    .cookies-banner {
+      background: linear-gradient(135deg, rgba(240,180,40,.1), rgba(240,180,40,.04));
+      border: 1px solid rgba(240,180,40,.25); border-radius: 16px;
+      padding: 28px 32px; margin-top: 32px;
+      display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;
+    }
+    .cookies-banner-icon { font-size: 48px; flex-shrink: 0; }
+    .cookies-banner-body h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--gold); }
+    .cookies-banner-body p { font-size: 14px; color: var(--ice); line-height: 1.65; }
+    .cookies-banner-body p strong { color: var(--white); }
 
-/* ── DEADLINE PULSE ── */
-.hero-dead, .nav-dead {
-  animation: pulse-rose 2.5s ease-in-out infinite;
-}
-@keyframes pulse-rose {
-  0%,100% { opacity:1; }
-  50% { opacity:0.65; }
-}
+    /* ── FAQ ── */
+    .faq-list { margin-top: 32px; display: flex; flex-direction: column; gap: 0; max-width: 680px; }
+    .faq-item { padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .faq-item p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .faq-item p strong { color: var(--white); }
+    .faq-item p a { color: var(--blue-bright); text-decoration: none; }
 
-/* ── FLOW STEP HOVER ── */
-.flow-step {
-  transition: background .3s, padding-left .3s;
-  border-radius: 4px; padding-left: 0;
-}
-.flow-step:hover { background: rgba(63,182,240,.04); padding-left: 12px; }
-.flow-num { transition: color .3s, transform .3s; }
-.flow-step:hover .flow-num { color: var(--gold); transform: scale(1.1); }
+    /* ── FINAL CTA ── */
+    .final-cta {
+      text-align: center; padding: 80px 28px;
+      border-top: 1px solid var(--line);
+      max-width: 820px; margin: 0 auto;
+    }
+    .final-cta h2 { font-size: clamp(28px, 5vw, 54px); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+    .final-cta h2 .gold { color: var(--gold); }
+    .final-cta p { font-size: 15px; color: var(--ice); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+    .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-gold {
+      display: inline-block; background: var(--gold); color: #04102b;
+      font-size: 13px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+      padding: 15px 32px; border-radius: 12px; text-decoration: none; transition: background .2s;
+    }
+    .btn-gold:hover { background: #ffd06e; }
+    .btn-outline {
+      display: inline-block; background: transparent; color: var(--white);
+      font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 15px 32px; border-radius: 12px; text-decoration: none;
+      border: 1px solid rgba(255,255,255,.15); transition: all .2s;
+    }
+    .btn-outline:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
 
-/* ── NAV ── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(7,8,8,.93); backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--mint-line);
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 32px;
-}
-.nav-logo { font-family: 'Anton', sans-serif; font-size: 15px; letter-spacing: 3px; color: var(--mint); }
-.nav-dead { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--rose); font-weight: 700; }
-.nav-cta { background: var(--mint); color: var(--black); font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 9px 20px; border-radius: 4px; text-decoration: none; transition: background .2s; }
-.nav-cta:hover { background: #5fc9ff; }
+    /* ── TICKER ── */
+    .ticker-wrap {
+      overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 12px 0; background: rgba(91,157,255,.03);
+    }
+    .ticker {
+      display: flex; width: max-content;
+      animation: ticker 24s linear infinite;
+    }
+    .ticker-item {
+      font-size: 11px; font-weight: 700; letter-spacing:.14em; text-transform: uppercase;
+      color: var(--muted); padding: 0 32px; white-space: nowrap;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .ticker-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-/* ── HERO ── */
-.hero {
-  min-height: 90vh; display: flex; flex-direction: column; justify-content: center;
-  padding: 80px 32px 64px; max-width: 1080px; margin: 0 auto;
-  position: relative;
-}
-.hero::before {
-  content: ''; position: fixed; top: -20%; right: -20%; width: 900px; height: 900px;
-  background: radial-gradient(circle, rgba(63,182,240,.05) 0%, transparent 65%);
-  pointer-events: none; z-index: 0;
-}
-.hero-content { position: relative; z-index: 1; }
-.kicker {
-  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--mint); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
-}
-.kicker::before { content: ''; width: 32px; height: 1px; background: var(--mint); flex-shrink: 0; }
-.hero h1 {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(48px, 9vw, 108px);
-  line-height: 0.9; letter-spacing: -1px;
-  max-width: 900px;
-}
-.hero h1 .mint { color: var(--mint); }
-.hero h1 .gold { color: var(--gold); }
-.hero-sub {
-  margin-top: 28px; max-width: 580px;
-  font-size: 17px; color: var(--muted); line-height: 1.8;
-}
-.hero-sub strong { color: var(--white); }
-.hero-stats {
-  margin-top: 48px; display: flex; gap: 0; flex-wrap: wrap;
-  border: 1px solid var(--mint-line); border-radius: 4px; overflow: hidden;
-  max-width: 640px;
-}
-.hero-stat {
-  flex: 1; min-width: 140px; padding: 20px 24px;
-  border-right: 1px solid var(--mint-line);
-}
-.hero-stat:last-child { border-right: none; }
-.hero-stat .num { font-family: 'Anton', sans-serif; font-size: 36px; color: var(--mint); line-height: 1; }
-.hero-stat .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
-.hero-dead {
-  margin-top: 32px; display: inline-flex; align-items: center; gap: 10px;
-  background: rgba(232,92,106,.1); border: 1px solid rgba(232,92,106,.35);
-  border-radius: 4px; padding: 10px 18px;
-  font-size: 13px; color: var(--rose); font-weight: 700; letter-spacing: 1px;
-}
-.hero-dead::before { content: '⏰'; font-size: 16px; }
-
-/* ── SECTION WRAPPER ── */
-.section { max-width: 1080px; margin: 0 auto; padding: 80px 32px; border-top: 1px solid var(--mint-line); }
-.section-kicker { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--mint); margin-bottom: 14px; }
-.section h2 { font-family: 'Anton', sans-serif; font-size: clamp(28px, 4vw, 52px); margin-bottom: 20px; line-height: 1; }
-.section .lead { font-size: 16px; color: var(--muted); max-width: 680px; line-height: 1.85; }
-.section .lead strong { color: var(--white); }
-
-/* ── WHAT IS THIS ── */
-.explainer-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-.explainer-card {
-  background: var(--panel); border: 1px solid var(--mint-line); border-radius: 4px; padding: 28px;
-  transition: border-color .25s;
-}
-.explainer-card:hover { border-color: var(--mint); }
-.explainer-card .icon { font-size: 32px; margin-bottom: 14px; display: block; }
-.explainer-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
-.explainer-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
-
-/* ── WHO IS COOKIES ── */
-.cookies-block {
-  margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-  align-items: start;
-}
-@media(max-width: 640px) { .cookies-block { grid-template-columns: 1fr; } }
-.cookies-text p { font-size: 15px; color: var(--muted); line-height: 1.85; }
-.cookies-text p + p { margin-top: 12px; }
-.cookies-text strong { color: var(--white); }
-.cookies-proof {
-  background: var(--panel); border: 1px solid var(--mint-line); border-radius: 4px; padding: 28px;
-}
-.cookies-proof .proof-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mint); margin-bottom: 16px; }
-.proof-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
-.proof-item:last-child { margin-bottom: 0; }
-.proof-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); flex-shrink: 0; margin-top: 7px; }
-.proof-item p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-.proof-item p strong { color: var(--white); }
-
-/* ── HOW IT WORKS ── */
-.flow { margin-top: 40px; display: flex; flex-direction: column; gap: 0; max-width: 680px; }
-.flow-step { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid var(--mint-line); }
-.flow-step:last-child { border-bottom: none; }
-.flow-num { font-family: 'Anton', sans-serif; font-size: 42px; color: var(--mint); line-height: 1; flex-shrink: 0; width: 52px; }
-.flow-body h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
-.flow-body p { font-size: 14px; color: var(--muted); line-height: 1.7; }
-.flow-body p strong { color: var(--white); }
-
-/* ── TIERS ── */
-.tiers { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-.tier {
-  background: var(--panel); border: 1px solid var(--mint-line); border-radius: 4px; padding: 32px;
-  position: relative; transition: border-color .25s, transform .25s;
-  display: flex; flex-direction: column;
-}
-.tier:hover { border-color: var(--mint); transform: translateY(-2px); }
-.tier.featured {
-  border-color: var(--gold);
-  background: linear-gradient(160deg, rgba(201,162,75,.07), var(--panel) 60%);
-}
-.tier.featured::before {
-  content: '★ Most Popular';
-  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
-  background: var(--gold); color: var(--black);
-  font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-  padding: 4px 14px; border-radius: 0 0 6px 6px;
-}
-.tier-name { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-.tier-price { font-family: 'Anton', sans-serif; font-size: 52px; color: var(--white); line-height: 1; }
-.tier-price sup { font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 300; vertical-align: top; margin-top: 10px; display: inline-block; }
-.tier-tagline { font-size: 14px; color: var(--muted); margin-top: 10px; margin-bottom: 24px; line-height: 1.5; }
-.tier-divider { height: 1px; background: var(--mint-line); margin-bottom: 20px; }
-.tier-perks { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-.tier-perks li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--muted); line-height: 1.5; }
-.tier-perks li::before { content: '✓'; color: var(--mint); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
-.tier-perks li.gold-perk::before { content: '★'; color: var(--gold); }
-.tier-perks li strong { color: var(--white); }
-.tier-cta {
-  margin-top: 28px; display: block; text-align: center;
-  padding: 13px; border-radius: 4px; font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
-  text-transform: uppercase; text-decoration: none; transition: all .2s; cursor: pointer;
-  border: 1px solid var(--mint); color: var(--mint); background: transparent;
-}
-.tier-cta:hover { background: var(--mint); color: var(--black); }
-.tier.featured .tier-cta { background: var(--gold); color: var(--black); border-color: var(--gold); }
-.tier.featured .tier-cta:hover { background: #dbb85a; }
-
-/* ── BUSINESS TYPE CALLOUTS ── */
-.biz-section { margin-top: 40px; }
-.biz-note { font-size: 13px; color: var(--muted); margin-bottom: 24px; font-style: italic; }
-.biz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.biz-card {
-  background: var(--panel); border: 1px solid var(--mint-line); border-radius: 4px; padding: 22px;
-}
-.biz-card .biz-type { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mint); margin-bottom: 8px; }
-.biz-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
-.biz-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
-.biz-card p strong { color: var(--white); }
-
-/* ── MISSION ── */
-.mission-block {
-  margin-top: 40px; padding: 40px;
-  background: var(--panel); border: 1px solid var(--mint-line); border-radius: 4px;
-  border-left: 3px solid var(--mint);
-}
-.mission-block p { font-size: 16px; color: var(--muted); line-height: 1.9; max-width: 700px; }
-.mission-block p strong { color: var(--white); }
-.mission-block p + p { margin-top: 14px; }
-
-/* ── WHAT YOU GET ── */
-.deliverables { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.del-card { background: var(--panel); border: 1px solid var(--mint-line); border-radius: 4px; padding: 24px; }
-.del-card .del-icon { font-size: 28px; margin-bottom: 12px; display: block; }
-.del-card h3 { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
-.del-card p { font-size: 12px; color: var(--muted); line-height: 1.65; }
-
-/* ── DEADLINE BANNER ── */
-.deadline-banner {
-  background: linear-gradient(135deg, rgba(232,92,106,.08), rgba(201,162,75,.06));
-  border: 1px solid rgba(232,92,106,.3); border-radius: 4px;
-  padding: 32px 40px; margin-top: 40px;
-  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-}
-.deadline-banner .dead-text h3 { font-family: 'Anton', sans-serif; font-size: 28px; color: var(--rose); margin-bottom: 6px; }
-.deadline-banner .dead-text p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 480px; }
-.deadline-banner .dead-text p strong { color: var(--white); }
-
-/* ── CTA SECTION ── */
-.cta-section {
-  max-width: 1080px; margin: 0 auto; padding: 80px 32px;
-  text-align: center; border-top: 1px solid var(--mint-line);
-}
-.cta-section h2 { font-family: 'Anton', sans-serif; font-size: clamp(36px, 6vw, 72px); line-height: 0.95; margin-bottom: 20px; }
-.cta-section h2 .mint { color: var(--mint); }
-.cta-section p { font-size: 16px; color: var(--muted); max-width: 520px; margin: 0 auto 40px; line-height: 1.8; }
-.cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--mint); color: var(--black);
-  font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
-  padding: 16px 32px; border-radius: 4px; text-decoration: none;
-  transition: background .2s, transform .2s;
-}
-.btn-primary:hover { background: #5fc9ff; transform: translateY(-1px); }
-.btn-secondary {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: transparent; color: var(--white);
-  font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  padding: 16px 32px; border-radius: 4px; text-decoration: none;
-  border: 1px solid rgba(255,255,255,.15);
-  transition: border-color .2s, transform .2s;
-}
-.btn-secondary:hover { border-color: var(--mint); color: var(--mint); transform: translateY(-1px); }
-
-/* ── FAQ ── */
-.faq { margin-top: 40px; max-width: 700px; }
-.faq-item { padding: 20px 0; border-bottom: 1px solid var(--mint-line); }
-.faq-item:last-child { border-bottom: none; }
-.faq-item h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-.faq-item p { font-size: 14px; color: var(--muted); line-height: 1.7; }
-
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--mint-line); padding: 32px;
-  text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
-}
-footer a { color: var(--mint); text-decoration: none; }
-
-/* ── COUNTDOWN ── */
-.countdown { display: flex; gap: 20px; margin-top: 24px; flex-wrap: wrap; }
-.cd-block { text-align: center; }
-.cd-num { font-family: 'Anton', sans-serif; font-size: 48px; color: var(--white); line-height: 1; display: block; }
-.cd-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
-
-@media(max-width: 640px) {
-  nav { padding: 12px 20px; }
-  .nav-dead { display: none; }
-  .hero { padding: 56px 20px 48px; min-height: auto; padding-top: 40px; }
-  .section { padding: 56px 20px; }
-  .tier { padding: 24px; }
-  .mission-block { padding: 24px; }
-  .deadline-banner { padding: 24px; flex-direction: column; }
-  .cta-section { padding: 56px 20px; }
-  .hero-stat .num { font-size: 28px; }
-}
-</style>
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line); padding: 28px;
+      text-align: center; font-size: 11px; color: var(--muted); letter-spacing:.08em;
+    }
+    footer a { color: var(--blue-bright); text-decoration: none; }
+  </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
-
-<nav>
-  <div class="nav-logo">USTREET HUNT</div>
-  <div class="nav-dead">⏰ Deadline: July 4</div>
-  <a class="nav-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Hunt Sponsorship">Claim Your Spot →</a>
+<!-- NAV -->
+<nav class="sp-nav">
+  <div class="sp-nav-logo">🍪 U Street <span>Passport</span></div>
+  <div class="sp-nav-dead">⏰ Deadline: July 4</div>
+  <a class="sp-nav-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Sponsor">Get on the Map →</a>
 </nav>
 
-<!-- ── TICKER ── -->
+<!-- TICKER -->
 <div class="ticker-wrap">
-  <div class="ticker" id="ticker">
-    <div class="ticker-item">Cookies DC × ATCHÉ <span class="dot"></span></div>
-    <div class="ticker-item">July 11, 2026 <span class="dot"></span></div>
-    <div class="ticker-item">U Street Corridor <span class="dot"></span></div>
-    <div class="ticker-item">Deadline July 4 <span class="dot"></span></div>
-    <div class="ticker-item">11 Checkpoints <span class="dot"></span></div>
-    <div class="ticker-item">500+ Hunters <span class="dot"></span></div>
-    <div class="ticker-item">Washington DC <span class="dot"></span></div>
-    <div class="ticker-item">Limited Spots <span class="dot"></span></div>
-    <!-- duplicate for seamless loop -->
-    <div class="ticker-item">Cookies DC × ATCHÉ <span class="dot"></span></div>
-    <div class="ticker-item">July 11, 2026 <span class="dot"></span></div>
-    <div class="ticker-item">U Street Corridor <span class="dot"></span></div>
-    <div class="ticker-item">Deadline July 4 <span class="dot"></span></div>
-    <div class="ticker-item">11 Checkpoints <span class="dot"></span></div>
-    <div class="ticker-item">500+ Hunters <span class="dot"></span></div>
-    <div class="ticker-item">Washington DC <span class="dot"></span></div>
-    <div class="ticker-item">Limited Spots <span class="dot"></span></div>
+  <div class="ticker">
+    <div class="ticker-item">Cookies DC × ATCHÉ <span class="ticker-dot"></span></div>
+    <div class="ticker-item">July 11, 2026 <span class="ticker-dot"></span></div>
+    <div class="ticker-item">U Street Corridor <span class="ticker-dot"></span></div>
+    <div class="ticker-item">13 Stops <span class="ticker-dot"></span></div>
+    <div class="ticker-item">150–300 Hunters <span class="ticker-dot"></span></div>
+    <div class="ticker-item">Deadline July 4 <span class="ticker-dot"></span></div>
+    <div class="ticker-item">Washington DC <span class="ticker-dot"></span></div>
+    <div class="ticker-item">One Day Only <span class="ticker-dot"></span></div>
+    <div class="ticker-item">Cookies DC × ATCHÉ <span class="ticker-dot"></span></div>
+    <div class="ticker-item">July 11, 2026 <span class="ticker-dot"></span></div>
+    <div class="ticker-item">U Street Corridor <span class="ticker-dot"></span></div>
+    <div class="ticker-item">13 Stops <span class="ticker-dot"></span></div>
+    <div class="ticker-item">150–300 Hunters <span class="ticker-dot"></span></div>
+    <div class="ticker-item">Deadline July 4 <span class="ticker-dot"></span></div>
+    <div class="ticker-item">Washington DC <span class="ticker-dot"></span></div>
+    <div class="ticker-item">One Day Only <span class="ticker-dot"></span></div>
   </div>
 </div>
 
-<!-- ── HERO ── -->
-<div class="hero">
-  <div class="hero-content">
-    <div class="kicker">Cookies DC × ATCHÉ · July 11, 2026</div>
-    <h1><span class="word">Your</span> <span class="word">door.</span><br><span class="word">Their</span> <span class="word mint">next stop.</span></h1>
-    <p class="hero-sub">
-      <strong>The U Street Hunt</strong> is a one-day corridor passport activation sending hundreds of people up and down U Street — stopping at sponsors, spending money, earning stamps. Think foot traffic you didn't have to advertise for.
+<!-- HERO -->
+<div class="sp-hero">
+  <div class="sp-hero-inner">
+    <div class="sp-eyebrow">Cookies DC × ATCHÉ · July 11, 2026</div>
+    <h1>Your door.<br><span class="gold">Their next stop.</span></h1>
+    <p>
+      The U Street Passport sends <strong>150–300 people</strong> walking the corridor on July 11 — stopping at every checkpoint, earning stamps, competing for prizes. <strong>No cash required to participate</strong> — donate a perk, and your business is on the map.
     </p>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="num">11</div>
-        <div class="label">Corridor Stops</div>
+
+    <div class="sp-stats">
+      <div class="sp-stat">
+        <div class="num">July 11</div>
+        <div class="lbl">One Day</div>
       </div>
-      <div class="hero-stat">
-        <div class="num">7</div>
-        <div class="label">Days of Traffic</div>
+      <div class="sp-stat">
+        <div class="num">13</div>
+        <div class="lbl">Stops</div>
       </div>
-      <div class="hero-stat">
-        <div class="num">500+</div>
-        <div class="label">Target Hunters</div>
+      <div class="sp-stat">
+        <div class="num">300+</div>
+        <div class="lbl">Target Hunters</div>
       </div>
-      <div class="hero-stat">
+      <div class="sp-stat">
         <div class="num">$0</div>
-        <div class="label">Entry Tier</div>
+        <div class="lbl">Entry Tier</div>
       </div>
     </div>
-    <div class="hero-dead">Sponsorship closes July 4 — spots are limited by corridor space</div>
+
+    <div class="sp-deadline">⏰ Sponsorship closes July 4 — limited corridor spots</div>
   </div>
 </div>
 
-<!-- ── WHAT IS THIS ── -->
-<div class="section">
-  <div class="section-kicker">The Concept</div>
-  <h2>A scavenger hunt that<br>pays <span style="color:var(--mint)">your rent.</span></h2>
+<!-- HOW IT WORKS -->
+<div class="sp-section">
+  <div class="sp-section-eyebrow">The Concept</div>
+  <h2>What is the <span style="color:var(--blue-bright)">U Street Passport?</span></h2>
   <p class="lead">
-    Participants download a digital passport, register with their phone, and spend the week of July 11 hitting stops along U Street. <strong>Every sponsor location is a checkpoint.</strong> Hunters scan a QR code at your counter, earn stamps and points, and unlock a perk you set — a discount, a free item, early access, whatever works for your business. The more stops they hit, the better their prizes. The more they hit yours, the more they spend with you.
+    A one-day cultural corridor experience anchored at <strong>Cookies DC</strong>. Participants register on their phone, walk U Street, collect stamps at each stop by entering a secret word from your staff, and compete on a live leaderboard for prizes. Every stop = foot traffic with purchase intent.
   </p>
-  <div class="explainer-grid stagger">
-    <div class="explainer-card">
+
+  <div class="how-grid">
+    <div class="how-card">
       <span class="icon">📲</span>
-      <h3>Digital Passport</h3>
-      <p>Hunters register via SMS — no app download. They get a passport that tracks stamps, points, and prizes. It lives in their browser.</p>
+      <h3>Players Register</h3>
+      <p>Sign up with a phone number. No app download. Passport lives in the browser. They see your stop on the map before they even leave home.</p>
     </div>
-    <div class="explainer-card">
+    <div class="how-card">
       <span class="icon">📍</span>
-      <h3>You're a Checkpoint</h3>
-      <p>We place a QR code at your counter. Hunter walks in, scans it, earns their stamp. You get a real customer in the door — not just an impression.</p>
+      <h3>They Walk to You</h3>
+      <p>Your business is listed as a checkpoint stop. The hunt sends players to your specific address with a reason to walk in the door.</p>
     </div>
-    <div class="explainer-card">
+    <div class="how-card">
+      <span class="icon">🗝️</span>
+      <h3>Staff Give the Word</h3>
+      <p>Your staff share one secret word with players who come in. Player enters it in the app, earns their stamp. Zero setup, zero friction.</p>
+    </div>
+    <div class="how-card">
       <span class="icon">🎁</span>
-      <h3>Your Perk, Your Call</h3>
-      <p>You decide the offer. Free side, 10% off, free entry before 11pm, first drink deal — whatever drives conversions for your business.</p>
-    </div>
-    <div class="explainer-card">
-      <span class="icon">🏆</span>
-      <h3>Prize Wheel & Leaderboard</h3>
-      <p>Top hunters win prizes. The leaderboard is live and public — people check it daily and try to climb. That means repeat visits to earn more stamps.</p>
+      <h3>They Redeem Your Perk</h3>
+      <p>You set the offer. A free item, a discount, priority seating — whatever makes sense for your business. Real conversions, not just impressions.</p>
     </div>
   </div>
-</div>
 
-<!-- ── ANIMATED CORRIDOR ── -->
-<div class="corridor-visual">
-  <div style="text-align:center;margin-bottom:32px;" class="reveal">
-    <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--mint);margin-bottom:8px;">The Route</div>
-    <div style="font-family:'Anton',sans-serif;font-size:clamp(20px,3vw,32px);">11 stops. 7 nights. 1 block.</div>
-  </div>
-  <div class="corridor-track" id="corridorTrack">
-    <div class="corridor-track-fill" id="corridorFill"></div>
-    <div class="corridor-stops" id="corridorStops"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:8px;">
-    <span>14th St</span><span style="color:var(--mint)">← U Street Corridor →</span><span>17th St</span>
-  </div>
-</div>
-
-<!-- ── WHO IS COOKIES ── -->
-<div class="section">
-  <div class="section-kicker">The Anchor</div>
-  <h2>What is <span style="color:var(--mint)">Cookies DC?</span></h2>
-  <div class="cookies-block">
-    <div class="cookies-text">
+  <!-- Cookies Anchor Banner -->
+  <div class="cookies-banner">
+    <div class="cookies-banner-icon">🍪</div>
+    <div class="cookies-banner-body">
+      <h3>Anchored by Cookies DC</h3>
       <p>
-        <strong>Cookies is one of the most recognized cannabis lifestyle brands in the country</strong> — founded by Bay Dreamer (Berner) with over 100 retail locations globally. Their DC location at 1115 U St NW opened in 2025 and is anchoring their East Coast presence.
-      </p>
-      <p>
-        July 11 is Cookies DC's one-year anniversary on U Street. The Hunt launches the same night — making it the <strong>biggest corridor activation of the year</strong>, backed by a national brand's audience and ATCHÉ's local creative network.
-      </p>
-      <p>
-        Being a sponsor isn't just foot traffic during the event. <strong>You're co-branded with Cookies DC</strong> on the passport, on the map, in every SMS that goes out to registered hunters, and across ATCHÉ's social channels. That's real association with a national name — for a local price.
+        Cookies DC — one of the country's most recognized cannabis lifestyle brands — is the presenting partner and HQ for this event. <strong>July 11 is Cookies DC's one-year anniversary on U Street.</strong> Every sponsor is co-branded with Cookies on the passport, on the map, and in every promotional push. That's a national brand association for a local investment.
       </p>
     </div>
-    <div class="cookies-proof">
-      <div class="proof-label">Why This Is Different</div>
-      <div class="proof-item"><div class="proof-dot"></div><p><strong>Not a one-night event.</strong> Seven full days of the hunt means seven chances for each hunter to visit your location and convert.</p></div>
-      <div class="proof-item"><div class="proof-dot"></div><p><strong>Tracked, not estimated.</strong> Every scan at your checkpoint is logged. You'll know exactly how many people it drove through your door.</p></div>
-      <div class="proof-item"><div class="proof-dot"></div><p><strong>You set the perk.</strong> No predetermined discount structure — you decide what offer makes sense for your margins and your customers.</p></div>
-      <div class="proof-item"><div class="proof-dot"></div><p><strong>U Street stays on U Street.</strong> Every dollar from this hunt circulates in the corridor. This is the block investing in itself.</p></div>
+  </div>
+</div>
+
+<!-- WHAT YOU GIVE / GET -->
+<div class="sp-section">
+  <div class="sp-section-eyebrow">The Exchange</div>
+  <h2>What you give. <span style="color:var(--blue-bright)">What you get.</span></h2>
+
+  <div class="give-get">
+    <div class="gg-card">
+      <div class="gg-label">You Give</div>
+      <ul class="gg-list">
+        <li>A perk for passport holders (you choose what)</li>
+        <li>One secret word for your staff to share</li>
+        <li>That's it — no tech, no training, no changes to how you operate</li>
+      </ul>
+    </div>
+    <div class="gg-card get">
+      <div class="gg-label blue">You Get</div>
+      <ul class="gg-list">
+        <li class="bold">Your business listed on the live passport app</li>
+        <li class="bold">Your location pinned on the corridor map</li>
+        <li class="bold">150–300 people walking through your door on July 11</li>
+        <li class="bold">Co-branded with Cookies DC on all promotional materials</li>
+        <li class="bold">Post-event visit count report</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Spin Wheel Donation Callout -->
+  <div class="spin-callout">
+    <div class="spin-callout-icon">🎰</div>
+    <div class="spin-callout-body">
+      <h3>Donate a Prize → Get on the Spin Wheel</h3>
+      <p>
+        Players earn spin tokens every 3 stamps. The spin wheel displays your business name next to your donated prize — <strong>your brand stays visible every time someone spins.</strong> Current wheel prizes come from corridor businesses:
+      </p>
+      <div class="wheel-preview">
+        <div class="wheel-slot">🍦 Free scoop — Jeni's</div>
+        <div class="wheel-slot">💨 Free tea — Tipsy Hookah</div>
+        <div class="wheel-slot">🍽️ Free dessert — Oohs & Ahhs</div>
+        <div class="wheel-slot">🌭 Free chili dog — Ben's</div>
+        <div class="wheel-slot">🍪 Cookies merch</div>
+        <div class="wheel-slot">🌶️ Free drink — Spicy Water</div>
+      </div>
+      <p style="margin-top:12px;font-size:13px;color:var(--muted);">Want your business on the wheel? <strong style="color:var(--white);">Donate any prize worth $10 or more</strong> and we'll add your slot.</p>
     </div>
   </div>
 </div>
 
-<!-- ── HOW IT WORKS ── -->
-<div class="section">
-  <div class="section-kicker">For Sponsors</div>
-  <h2>How it <span style="color:var(--mint)">works.</span></h2>
-  <p class="lead">Three things from you. Everything else is handled.</p>
-  <div class="flow">
-    <div class="flow-step">
-      <div class="flow-num">01</div>
-      <div class="flow-body">
-        <h3>Pick your tier & confirm your perk</h3>
-        <p>Choose a sponsorship level (below), then tell us what offer you want to extend to hunters. <strong>We handle all setup</strong> — passport listing, QR code printing, leaderboard placement, everything.</p>
-      </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-num">02</div>
-      <div class="flow-body">
-        <h3>We drop off your QR before July 11</h3>
-        <p>We print and deliver a branded checkpoint card to your location. Your staff just needs to <strong>display it at the counter</strong> — nothing else changes about your operation.</p>
-      </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-num">03</div>
-      <div class="flow-body">
-        <h3>Hunters come to you</h3>
-        <p>July 11, registered hunters walk in, scan, earn their stamp, and redeem your perk. <strong>Real customers, not followers.</strong> After the event you get a full scan report.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── TIERS ── -->
-<div class="section">
-  <div class="section-kicker">Sponsorship Tiers</div>
+<!-- TIERS -->
+<div class="sp-section">
+  <div class="sp-section-eyebrow">Participation Tiers</div>
   <h2>Pick your <span style="color:var(--gold)">level.</span></h2>
-  <p class="lead">Four tiers — three for corridor businesses, one for brands outside U Street who want access to the crowd. All include placement on the passport and a post-event report.</p>
+  <p class="lead">Three ways to participate. The only requirement is a perk for passport holders — everything else scales with how much visibility you want.</p>
 
-  <div class="tiers stagger">
+  <div class="tiers-grid">
 
-    <!-- CHECKPOINT -->
-    <div class="tier">
-      <div class="tier-name">Checkpoint Stop</div>
-      <div class="tier-price"><sup>$</sup>100</div>
-      <div class="tier-tagline">You're on the map. Hunters come to you. That's it.</div>
+    <!-- CHECKPOINT (FREE) -->
+    <div class="tier-card">
+      <div class="tier-name-label">Checkpoint Stop</div>
+      <div class="tier-price">
+        <sup>$</sup>0
+        <span class="or-donate">Donate a perk</span>
+      </div>
+      <div class="tier-tagline">You're on the map. Players come to you. No cash required.</div>
       <div class="tier-divider"></div>
       <ul class="tier-perks">
-        <li>Listed on the <strong>digital passport</strong> as an official stop</li>
+        <li>Listed on the <strong>live passport app</strong></li>
+        <li>Pinned on the <strong>corridor map</strong></li>
         <li>Your perk shown to every hunter who opens your stop</li>
-        <li>Listed on the <strong>corridor map</strong> with name, address, emoji</li>
+        <li>Staff share one secret word — no setup beyond that</li>
         <li>Post-event <strong>visit count report</strong></li>
       </ul>
-      <a class="tier-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Checkpoint Tier">Claim Your Stop →</a>
+      <a class="tier-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Checkpoint Stop">Join as a Stop →</a>
     </div>
 
-    <!-- PARTNER (featured) -->
-    <div class="tier featured">
-      <div class="tier-name">Corridor Partner</div>
-      <div class="tier-price"><sup>$</sup>250</div>
-      <div class="tier-tagline">Named sponsor. Co-branding. Real amplification.</div>
+    <!-- CORRIDOR PARTNER (featured) -->
+    <div class="tier-card gold-tier">
+      <div class="tier-best">Most Visibility</div>
+      <div class="tier-name-label">Corridor Partner</div>
+      <div class="tier-price">
+        <sup>$</sup>100
+        <span class="or-donate">or donate a prize to the wheel</span>
+      </div>
+      <div class="tier-tagline">Named co-sponsor. Your brand across the promotional push.</div>
       <div class="tier-divider"></div>
       <ul class="tier-perks">
         <li>Everything in Checkpoint</li>
-        <li class="gold-perk"><strong>Named sponsor</strong> on all promotional materials</li>
-        <li class="gold-perk">Dedicated <strong>@atcheofficial post</strong> featuring your location</li>
-        <li class="gold-perk"><strong>Priority placement</strong> on the passport map</li>
-        <li class="gold-perk">Your name in <strong>SMS blasts</strong> to all registered players</li>
-        <li class="gold-perk"><strong>ATCHÉ photographer</strong> at your location the night of</li>
-        <li>Detailed analytics: visits, peak hours, repeat traffic</li>
+        <li class="gold"><strong>Named sponsor</strong> on all promo materials</li>
+        <li class="gold">Dedicated <strong>@atcheofficial post</strong> featuring your location</li>
+        <li class="gold"><strong>Priority placement</strong> on the passport map</li>
+        <li class="gold">Your slot on the <strong>spin wheel</strong> (with your donated prize)</li>
+        <li class="gold">Named in <strong>SMS blasts</strong> to all registered players</li>
+        <li class="gold">ATCHÉ photographer at your location the night of</li>
       </ul>
-      <a class="tier-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Partner Tier">Become a Partner →</a>
+      <a class="tier-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Corridor Partner">Become a Partner →</a>
     </div>
 
-    <!-- PRESENTING -->
-    <div class="tier">
-      <div class="tier-name">Presenting Sponsor</div>
+    <!-- PRESENTING SPONSOR -->
+    <div class="tier-card">
+      <div class="tier-name-label">Presenting Sponsor</div>
       <div class="tier-price"><sup>$</sup>500</div>
       <div class="tier-tagline">Your name next to Cookies DC on everything. One spot only.</div>
       <div class="tier-divider"></div>
       <ul class="tier-perks">
-        <li>Everything in Partner</li>
-        <li class="gold-perk"><strong>"Presented by [Your Brand]"</strong> on the landing page, passport, and all promo</li>
-        <li class="gold-perk">Your brand as a <strong>prize option</strong> — gift cards, product, store credit</li>
-        <li class="gold-perk"><strong>Full event coverage</strong> — photo + recap reel from your location</li>
-        <li class="gold-perk">Featured in <strong>every outbound SMS</strong> to all registered players</li>
-        <li class="gold-perk"><strong>Post-event recap video</strong> for your social</li>
-        <li class="gold-perk">First right of refusal on <strong>Q4 activation</strong></li>
+        <li>Everything in Corridor Partner</li>
+        <li class="gold"><strong>"Presented by [Your Brand]"</strong> on the passport, landing page, and all promo</li>
+        <li class="gold">Your brand as a <strong>tournament round prize</strong> (Round 1, 2, or 3 winner goes to your venue)</li>
+        <li class="gold"><strong>Full event coverage</strong> — photo + recap reel</li>
+        <li class="gold">Featured in <strong>every outbound SMS</strong></li>
+        <li class="gold"><strong>Post-event recap video</strong> for your social</li>
+        <li class="gold">First right of refusal on <strong>Q4 activation</strong></li>
       </ul>
       <a class="tier-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Presenting Sponsor">Inquire About Presenting →</a>
     </div>
 
-    <!-- BRAND SPONSOR (off-corridor) -->
-    <div class="tier">
-      <div class="tier-name">Brand Sponsor</div>
-      <div class="tier-price"><sup>$</sup>250</div>
-      <div class="tier-tagline">Not on U Street? You can still reach the crowd.</div>
-      <div class="tier-divider"></div>
-      <ul class="tier-perks">
-        <li>Your brand featured on the <strong>prize wheel</strong> in the passport app</li>
-        <li class="gold-perk">Logo + mention on the <strong>passport landing page</strong></li>
-        <li class="gold-perk">Named in <strong>pre-event SMS blast</strong> to all players</li>
-        <li class="gold-perk">Dedicated <strong>@atcheofficial story</strong> featuring your brand</li>
-        <li>Post-event <strong>impression + engagement report</strong></li>
-        <li style="color:#555;">No physical checkpoint required — reach the audience digitally</li>
-      </ul>
-      <a class="tier-cta" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — Brand Sponsor">Reach the Crowd →</a>
-    </div>
-
-  </div>
-
-  <!-- Business type callouts -->
-  <div class="biz-section">
-    <p class="biz-note">Not sure which tier fits your business? Here's how other U Street businesses are thinking about it:</p>
-    <div class="biz-grid stagger">
-      <div class="biz-card">
-        <div class="biz-type">Restaurants & Food</div>
-        <h3>Drive dinner & late-night covers</h3>
-        <p>A <strong>free side or dessert with passport</strong> gets hunters in the door. They stay for a full meal. At $150, one new table pays for the whole sponsorship.</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">Bars & Lounges</div>
-        <h3>Fill the room early</h3>
-        <p>Offer <strong>free entry before 11pm</strong> or a first-drink deal. Hunters come in, stay, spend on drinks. You convert walk-ins who had a reason to pick your door over the next one.</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">Retail & Cannabis</div>
-        <h3>New customers with purchase intent</h3>
-        <p>A <strong>10% off stamp</strong> means hunters are walking in with buying intent already primed. They're there to scan and spend — not browse and leave.</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">Hookah & Experiences</div>
-        <h3>Turn browsers into bookings</h3>
-        <p>Offer a <strong>free tea or small upgrade</strong> with any hookah order. Low cost to you, high perceived value to the hunter. And they bring their whole group.</p>
-      </div>
-    </div>
   </div>
 </div>
 
-<!-- ── MISSION ── -->
-<div class="section">
-  <div class="section-kicker">The Bigger Picture</div>
-  <h2>U Street <span style="color:var(--mint)">wins together.</span></h2>
-  <div class="mission-block">
-    <p>
-      <strong>This isn't just a marketing event.</strong> The U Street Hunt exists because the corridor's businesses don't benefit from each other the way they should. You're all within walking distance, serving overlapping customers, but most nights someone picks one spot and stays there. The Hunt changes that — it creates a reason to move, to explore, to spend across multiple doors in a single night.
-    </p>
-    <p>
-      When a hunter gets stamped at your location and earns enough points to unlock a prize at the next stop, they don't go home. <strong>They keep walking the block.</strong> Every sponsor benefits from every other sponsor's foot traffic. The corridor rising together is the whole point.
-    </p>
-    <p>
-      ATCHÉ's mission is to build infrastructure for Black creative communities — starting on U Street. This hunt is the first public demonstration that we can organize the corridor, move real people through it, and make the whole thing measurable. <strong>Your sponsorship is proof that U Street businesses invest in their own block.</strong>
-    </p>
-  </div>
-</div>
+<!-- FAQ -->
+<div class="sp-section">
+  <div class="sp-section-eyebrow">Common Questions</div>
+  <h2>Straight <span style="color:var(--blue-bright)">answers.</span></h2>
 
-<!-- ── DEADLINE ── -->
-<div class="section" style="padding-bottom: 40px;">
-  <div class="section-kicker">Timeline</div>
-  <h2>Don't miss <span style="color:var(--rose)">the window.</span></h2>
-  <p class="lead">Spots are limited by the number of stops on the corridor map. Once they're filled, they're filled — we can't add more without breaking the hunt experience.</p>
-  <div class="deadline-banner">
-    <div class="dead-text">
-      <h3>🗓 July 4 — Sponsorship Deadline</h3>
-      <p>We need a week before launch to print QR cards, update the passport, and run a pre-event SMS blast naming all sponsors. <strong>Anything after July 4 can't be included.</strong> The hunt goes live July 11 regardless.</p>
-    </div>
-    <a class="btn-primary" href="mailto:xavier@atcheofficial.com?subject=U Street Hunt Sponsorship">Secure My Spot →</a>
-  </div>
-</div>
-
-<!-- ── FAQ ── -->
-<div class="section">
-  <div class="section-kicker">Common Questions</div>
-  <h2>Straight <span style="color:var(--mint)">answers.</span></h2>
-  <div class="faq">
+  <div class="faq-list">
     <div class="faq-item">
       <h3>Do I need to change anything about how I operate?</h3>
-      <p>No. We deliver a printed QR card before July 11. You display it at your counter. When a hunter scans it, they see your perk and your checkpoint is stamped. That's it — no software, no training, no friction for your staff.</p>
+      <p>No. All you need is for one staff member to know the secret word. When a hunter walks in and asks for it, they give it. That's the entire staff requirement.</p>
     </div>
     <div class="faq-item">
-      <h3>What if I don't know what perk to offer?</h3>
-      <p>We'll suggest one based on your business type. The goal is something with low cost to you and high perceived value to a customer. A free item on a purchase, a percentage off, or early entry tend to work well. We figure it out together before the hunt launches.</p>
+      <h3>What perk should I offer?</h3>
+      <p>Whatever works for your margins. The most popular: <strong>free side with any purchase</strong> (restaurants), <strong>10% off</strong> (retail/cannabis), <strong>free entry before 10pm</strong> (bars/lounges), <strong>free tea/small upgrade</strong> (hookah). We'll suggest one if you're unsure — just reach out.</p>
     </div>
     <div class="faq-item">
-      <h3>What does ATCHÉ actually do?</h3>
-      <p>ATCHÉ is a community platform for creative women in DC nightlife — photographers, performers, hosts, DJs, stylists. We run activations, produce content, and build the infrastructure that connects U Street's creative and business scenes. This hunt is our first public corridor activation.</p>
+      <h3>What does "donate a prize to the spin wheel" mean?</h3>
+      <p>Every 3 stamps a player earns = 1 free spin on the prize wheel. If you donate a prize (a free item, gift card, discount) we add a slot on the wheel with your business name. Every spin, players see your brand. It's a free slot — we just need the donated item confirmed before July 4.</p>
     </div>
     <div class="faq-item">
-      <h3>I've never heard of this. Is it real?</h3>
-      <p>Yes. The passport app is live, the Supabase backend is built, Cookies DC is the anchor partner, and the launch date is July 11. You can view the live app at <a href="https://ustreet-hunt.atcheofficial.com" target="_blank" style="color:var(--mint)">ustreet-hunt.atcheofficial.com</a>. The Hunt happens regardless — the only question is whether your door is on the map.</p>
+      <h3>Is the event really just one day?</h3>
+      <p>Yes. Saturday, July 11, 4pm–10pm. We concentrated it intentionally — one big activation creates energy, competition, and FOMO. More players move faster when there's a real deadline. The corridor will feel it.</p>
     </div>
     <div class="faq-item">
-      <h3>What happens after July 18?</h3>
-      <p>You get a full scan report — total hunters who visited, peak days and times, repeat scans. Partner and Presenting sponsors get photo content from their location. And if it works, there's a second hunt in Q4 — sponsors from this one get first right of refusal.</p>
+      <h3>Is this real?</h3>
+      <p>The passport app is live and built. Supabase backend is running. Cookies DC is the anchor partner. You can see the live app at <a href="https://ustreet-hunt.atcheofficial.com" target="_blank">ustreet-hunt.atcheofficial.com</a>. The event happens regardless — the question is whether your door is on the map.</p>
     </div>
   </div>
 </div>
 
-<!-- ── FINAL CTA ── -->
-<div class="cta-section">
-  <h2>Your stop.<br><span class="mint">Their reason</span><br>to walk in.</h2>
-  <p>Seven days. Real foot traffic. Zero setup on your end. Deadline is July 4 — reach out now and we'll get you locked in before the map is full.</p>
-  <div class="cta-buttons">
-    <a class="btn-primary" href="mailto:xavier@atcheofficial.com?subject=U Street Hunt Sponsorship — I'm In">Email Xavier →</a>
-    <a class="btn-secondary" href="sms:+12024459999?body=Hey Xavier — I want to sponsor the U Street Hunt">Text to Claim Your Spot</a>
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <h2>Your stop.<br><span class="gold">Their reason</span><br>to walk in.</h2>
+  <p>One day. Real foot traffic. Zero setup. Deadline is July 4 — reach out and we'll lock you in before the map is full.</p>
+  <div class="cta-row">
+    <a class="btn-gold" href="mailto:xavier@atcheofficial.com?subject=U Street Passport — I'm In">Email Xavier →</a>
+    <!-- UPDATE: replace with your real number before deploying -->
+    <a class="btn-outline" href="sms:+15013973928?body=Hey Xavier — I want to be a checkpoint stop on the U Street Passport">Text to Claim →</a>
   </div>
-  <p style="margin-top: 24px; font-size: 12px; color: var(--muted);">Or call/text Xavier directly: <a href="tel:+12024459999" style="color:var(--mint)">+1 (202) 445-9999</a></p>
+  <p style="margin-top:24px;font-size:13px;color:var(--muted);">
+    Questions? Email <a href="mailto:xavier@atcheofficial.com" style="color:var(--blue-bright);">xavier@atcheofficial.com</a>
+  </p>
 </div>
 
 <footer>
-  <p>U Street Hunt · Cookies DC × ATCHÉ · July 11, 2026 · Washington, DC</p>
-  <p style="margin-top: 8px;"><a href="https://ustreet-hunt.atcheofficial.com">View the Live App</a> · <a href="https://atcheofficial.com">atcheofficial.com</a></p>
+  <p>U Street Passport · Cookies DC × ATCHÉ · July 11, 2026 · Washington, DC</p>
+  <p style="margin-top:8px;">
+    <a href="https://ustreet-hunt.atcheofficial.com">View the Live App →</a>
+  </p>
 </footer>
 
 <script>
-// ── PARTICLE CANVAS ──
-(function() {
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [], orbs = [];
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Floating orbs (large blobs)
-  class Orb {
-    constructor() { this.reset(); }
-    reset() {
-      this.x = Math.random() * W;
-      this.y = Math.random() * H;
-      this.r = 200 + Math.random() * 300;
-      this.vx = (Math.random() - 0.5) * 0.3;
-      this.vy = (Math.random() - 0.5) * 0.2;
-      this.color = Math.random() > 0.5
-        ? `rgba(63,182,240,${0.03 + Math.random() * 0.04})`
-        : `rgba(201,162,75,${0.02 + Math.random() * 0.03})`;
-    }
-    update() {
-      this.x += this.vx; this.y += this.vy;
-      if (this.x < -this.r) this.x = W + this.r;
-      if (this.x > W + this.r) this.x = -this.r;
-      if (this.y < -this.r) this.y = H + this.r;
-      if (this.y > H + this.r) this.y = -this.r;
-    }
-    draw() {
-      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
-      g.addColorStop(0, this.color);
-      g.addColorStop(1, 'transparent');
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = g;
-      ctx.fill();
-    }
-  }
-
-  // Small star particles
-  class Particle {
-    constructor() { this.reset(); }
-    reset() {
-      this.x = Math.random() * W;
-      this.y = Math.random() * H;
-      this.size = Math.random() * 1.5;
-      this.alpha = Math.random() * 0.4;
-      this.vy = -0.1 - Math.random() * 0.2;
-      this.vx = (Math.random() - 0.5) * 0.1;
-      this.life = 0;
-      this.maxLife = 200 + Math.random() * 300;
-    }
-    update() {
-      this.x += this.vx; this.y += this.vy;
-      this.life++;
-      if (this.life > this.maxLife || this.y < 0) this.reset();
-    }
-    draw() {
-      const progress = this.life / this.maxLife;
-      const a = this.alpha * Math.sin(progress * Math.PI);
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(63,182,240,${a})`;
-      ctx.fill();
-    }
-  }
-
-  for (let i = 0; i < 5; i++) orbs.push(new Orb());
-  for (let i = 0; i < 80; i++) {
-    const p = new Particle();
-    p.life = Math.random() * p.maxLife; // pre-age so they don't all start at same time
-    particles.push(p);
-  }
-
-  function loop() {
-    ctx.clearRect(0, 0, W, H);
-    orbs.forEach(o => { o.update(); o.draw(); });
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(loop);
-  }
-  loop();
-})();
-
-// ── SCROLL REVEAL ──
-(function() {
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger').forEach(el => io.observe(el));
-})();
-
-// ── ANIMATED CORRIDOR ──
-(function() {
-  const stops = [
-    { label: 'Cookies HQ', hq: true },
-    { label: "Whitlow's" },
-    { label: 'Service Bar' },
-    { label: 'Oohs & Ahhs' },
-    { label: 'Tipsy Hookah' },
-    { label: 'Pure Lounge' },
-    { label: '1942 Lounge' },
-    { label: 'DNA Lounge' },
-    { label: "Ben's", bonus: true },
-    { label: 'Lincoln' },
-    { label: 'Chi-Cha' },
-  ];
-
-  const container = document.getElementById('corridorStops');
-  const track = document.getElementById('corridorTrack');
-  if (!container || !track) return;
-
-  const dots = [];
-  stops.forEach((s, i) => {
-    const div = document.createElement('div');
-    div.className = 'c-stop' + (s.hq ? ' hq' : '');
-    div.innerHTML = `<span class="c-label">${s.label}</span>`;
-    container.appendChild(div);
-    dots.push(div);
-  });
-
-  const io = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
-    track.classList.add('animate');
-    dots.forEach((d, i) => {
-      setTimeout(() => d.classList.add('lit'), 200 + i * 180);
-    });
-  }, { threshold: 0.4 });
-  io.observe(track);
-})();
-
-// ── COUNT-UP STATS ──
-(function() {
-  const targets = [
-    { el: null, target: 11, suffix: '' },
-    { el: null, target: 7, suffix: '' },
-    { el: null, target: 500, suffix: '+' },
-    { el: null, target: 0, suffix: '' },
-  ];
-
-  const nums = document.querySelectorAll('.hero-stat .num');
-  nums.forEach((el, i) => {
-    if (!targets[i]) return;
-    targets[i].el = el;
-    const orig = el.textContent;
-    targets[i].orig = orig;
-    el.textContent = '0' + (targets[i].suffix || '');
-  });
-
-  // Animate on scroll into view
-  const io = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
-    nums.forEach((el, i) => {
-      const t = targets[i];
-      if (!t || t.target === 0) { el.textContent = t ? '$0' : el.textContent; return; }
-      let start = 0;
-      const dur = 1200;
-      const step = (ts) => {
-        if (!start) start = ts;
-        const pct = Math.min((ts - start) / dur, 1);
-        const ease = 1 - Math.pow(1 - pct, 3);
-        el.textContent = Math.round(ease * t.target) + (t.suffix || '');
-        if (pct < 1) requestAnimationFrame(step);
-      };
-      setTimeout(() => requestAnimationFrame(step), i * 120);
-    });
-  }, { threshold: 0.5 });
-
-  const statsEl = document.querySelector('.hero-stats');
-  if (statsEl) io.observe(statsEl);
-})();
-
-// ── DEADLINE COUNTDOWN ──
-function updateCountdown() {
+// Deadline countdown in nav
+function updateNavDead() {
   const deadline = new Date('2026-07-04T23:59:59-04:00');
   const diff = deadline - new Date();
   if (diff <= 0) return;
   const days = Math.floor(diff / (1000*60*60*24));
   const hours = Math.floor((diff / (1000*60*60)) % 24);
-  const mins = Math.floor((diff / (1000*60)) % 60);
-  const navDead = document.querySelector('.nav-dead');
-  if (navDead) navDead.textContent = `⏰ ${days}d ${hours}h ${mins}m left`;
+  const el = document.querySelector('.sp-nav-dead');
+  if (el) el.textContent = `⏰ ${days}d ${hours}h left`;
 }
-updateCountdown();
-setInterval(updateCountdown, 30000);
+updateNavDead();
+setInterval(updateNavDead, 60000);
 </script>
 
 </body>

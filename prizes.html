@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Prizes — U Street Hunt</title>
+  <title>Prizes — U Street Passport</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="U Street Hunt">
+  <meta name="apple-mobile-web-app-title" content="U Street Passport">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,118 +15,192 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    .prizes-header {
-      text-align: center;
-      padding: 40px 0 16px;
-    }
-    .prize-grid {
+    /* ── Tournament Rounds ── */
+    .rounds-grid {
       display: grid;
       gap: 12px;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    .wheel-section {
-      text-align: center;
-      padding: 30px 0;
-    }
-    .spin-result {
       margin-top: 16px;
-      font-weight: 800;
-      font-size: 20px;
-      color: var(--blue-bright);
-      min-height: 32px;
-      transition: all .3s;
     }
-    .threshold-badges {
+    .round-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 22px;
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 14px;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .round-card.active {
+      border-color: rgba(91,157,255,.3);
+      background: rgba(91,157,255,.06);
+    }
+    .round-emoji { font-size: 28px; flex-shrink: 0; }
+    .round-meta { flex: 1; }
+    .round-time { font-size: 11px; font-weight: 700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    .round-name { font-size: 16px; font-weight: 800; color: var(--white); margin-bottom:4px; }
+    .round-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .round-desc strong { color: var(--ice); }
+    .round-pts {
+      font-size: 13px; font-weight: 700;
+      color: var(--blue-bright); white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ── Overall Champion ── */
+    .champion-card {
+      background: linear-gradient(135deg, rgba(240,180,40,.12), rgba(240,180,40,.04));
+      border: 1px solid rgba(240,180,40,.35);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .champion-card h3 { font-size: 18px; font-weight: 900; color: var(--gold); margin: 10px 0 6px; }
+    .champion-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+    /* ── Spin Wheel ── */
+    .wheel-section { text-align: center; padding: 8px 0 24px; }
+    .spin-result {
+      margin-top: 16px; font-weight: 800; font-size: 20px;
+      color: var(--blue-bright); min-height: 32px; transition: all .3s;
+    }
+    .spin-sponsor {
+      font-size: 12px; color: var(--muted); font-weight: 600;
+      margin-top: 4px; min-height: 18px;
+    }
+
+    /* ── Prize List ── */
+    .prize-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .prize-item {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+    }
+    .prize-item.unlocked { border-color: rgba(91,157,255,.25); }
+    .prize-icon { font-size: 24px; flex-shrink: 0; }
+    .prize-info { flex: 1; }
+    .prize-name { font-size: 14px; font-weight: 700; color: var(--white); }
+    .prize-sponsor { font-size: 11px; color: var(--blue-bright); font-weight: 600; margin-top:2px; }
+    .prize-pts { font-size: 12px; color: var(--muted); margin-top:2px; }
+
+    /* Cookies presented by banner */
+    .presented-by {
+      background: rgba(240,180,40,.08); border: 1px solid rgba(240,180,40,.2);
+      border-radius: 12px; padding: 12px 16px; text-align: center;
+      font-size: 12px; font-weight: 700; color: var(--gold);
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px;
     }
   </style>
 </head>
 <body>
 
-<div class="wrap" id="prizes-page">
-  <div class="prizes-header">
-    <span style="font-size:48px;">🎁</span>
-    <h1 style="margin-top:8px;">Prize <span class="grad">Locker</span></h1>
-    <p class="sub" style="margin-top:6px;">Earn points, unlock prizes, spin to win.</p>
+<div class="wrap">
 
-    <div id="your-points-banner" class="card mt-2 hidden" style="display:inline-block;text-align:center;">
+  <div class="prizes-header" style="text-align:center;padding:40px 0 16px;">
+    <span style="font-size:48px;">🏆</span>
+    <h1 style="margin-top:8px;">Prize <span class="grad">Locker</span></h1>
+    <p class="sub" style="margin-top:6px;">Three prize rounds. A spin wheel full of business donations. One overall champion.</p>
+
+    <div class="presented-by mt-2">🍪 Prizes Presented by Cookies DC</div>
+
+    <div id="your-points-banner" class="card hidden" style="display:inline-block;text-align:center;margin-top:8px;">
       <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;">YOUR POINTS</div>
       <div class="points-display" id="banner-points">0</div>
-    </div>
-
-    <div class="threshold-badges mt-1">
-      <span class="badge badge-ice">50 pts — Small Prize</span>
-      <span class="badge badge-blue">100 pts — Mid-Tier</span>
-      <span class="badge badge-gold">150+ pts — Grand Prize</span>
+      <div style="font-size:12px;color:var(--muted);" id="banner-rank"></div>
     </div>
   </div>
 
-  <!-- Spin Wheel -->
-  <div class="wheel-section">
+  <!-- ── TOURNAMENT ROUNDS ── -->
+  <section>
+    <div class="eyebrow">Tournament</div>
+    <h2>Three rounds. <span class="grad">Four prizes.</span></h2>
+    <p style="margin-top:8px;font-size:14px;color:var(--muted);">Leaderboard snapshots at 6pm, 8pm, and 10pm. Top player at each snapshot wins. Overall champion takes the crown.</p>
+
+    <div class="rounds-grid mt-2">
+
+      <div class="round-card">
+        <div class="round-emoji">🌶️</div>
+        <div class="round-meta">
+          <div class="round-time">Round 1 · 4pm – 6pm</div>
+          <div class="round-name">Spicy Water Prize</div>
+          <div class="round-desc">Top of the leaderboard at 6pm wins a <strong>free tab at Spicy Water.</strong> First two hours — go hard out the gate.</div>
+        </div>
+        <div class="round-pts">6pm snapshot</div>
+      </div>
+
+      <div class="round-card">
+        <div class="round-emoji">💨</div>
+        <div class="round-meta">
+          <div class="round-time">Round 2 · 6pm – 8pm</div>
+          <div class="round-name">Tipsy Hookah Prize</div>
+          <div class="round-desc">Top player at 8pm wins a <strong>free hookah session at Tipsy Hookah Lounge.</strong> Mid-evening momentum prize.</div>
+        </div>
+        <div class="round-pts">8pm snapshot</div>
+      </div>
+
+      <div class="round-card">
+        <div class="round-emoji">🌙</div>
+        <div class="round-meta">
+          <div class="round-time">Round 3 · 8pm – 10pm</div>
+          <div class="round-name">Chi-Cha After Party Prize</div>
+          <div class="round-desc">Top player at 10pm wins <strong>free entry + open tab at Chi-Cha Lounge.</strong> The night is yours.</div>
+        </div>
+        <div class="round-pts">10pm snapshot</div>
+      </div>
+
+    </div>
+
+    <div class="champion-card">
+      <span style="font-size:40px;">🍪</span>
+      <h3>Overall Champion</h3>
+      <p>Highest total points across all three rounds wins the <strong>Cookies DC Prize Package</strong> — merch, store credit, and the U Street Passport crown. Presented at Chi-Cha after party.</p>
+    </div>
+  </section>
+
+  <!-- ── SPIN TO WIN ── -->
+  <section>
     <div class="eyebrow">Spin-to-Win</div>
     <h2>Every 3 stamps = <span class="grad">1 free spin</span></h2>
+    <p style="margin-top:8px;font-size:14px;color:var(--muted);">Prizes on the wheel are donated by U Street businesses. Win a business's prize, walk through their door to claim it.</p>
 
     <div id="spin-login-prompt" class="card text-center mt-2" style="max-width:400px;margin:16px auto;">
       <p style="color:var(--muted);">Register to spin the prize wheel.</p>
       <a href="register.html" class="btn btn-small mt-1">Register →</a>
     </div>
 
-    <div id="spin-game" class="hidden mt-2">
+    <div id="spin-game" class="hidden mt-2 wheel-section">
       <div class="spin-count">You have <strong id="spin-tokens-display">0</strong> spins remaining</div>
       <div class="wheel-container mt-1">
         <canvas id="wheel-canvas" class="wheel-canvas" width="280" height="280"></canvas>
         <button class="wheel-spin-btn" id="spin-btn" title="SPIN!">SPIN</button>
       </div>
       <div class="spin-result" id="spin-result"></div>
+      <div class="spin-sponsor" id="spin-sponsor"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- Prize Grid -->
-  <section style="border-bottom:none;">
-    <div class="eyebrow">All Prizes</div>
-    <h2>What you can <span class="grad">win</span></h2>
-    <div class="prize-grid mt-2" id="prize-grid">
+  <!-- ── WHEEL PRIZES LIST ── -->
+  <section>
+    <div class="eyebrow">What's on the Wheel</div>
+    <h2>Donated by <span class="grad">the corridor</span></h2>
+    <div class="prize-list" id="prize-list">
       <!-- Populated by JS -->
     </div>
   </section>
 
-  <!-- Finale Raffle -->
-  <section style="border-bottom:none;padding-bottom:30px;">
-    <div class="card card-accent text-center mt-2">
-      <span style="font-size:36px;">🏆</span>
-      <h3 style="font-weight:800;font-size:18px;margin-top:6px;">Finale Raffle — Chi-Cha Closing Night</h3>
-      <p style="font-size:13px;color:var(--muted);margin-top:4px;">Complete all 11 stops to auto-enter. Drawn live at the Chi-Cha finale. Must be present to win the grand prize.</p>
-    </div>
-  </section>
 </div>
 
 <script src="app.js"></script>
 <script>
-  // Prize definitions
-  const PRIZES = [
-    { name: 'Cookies Sticker Pack', ptsReq: 50, emoji: '🍪', sponsor: 'Cookies DC', desc: 'Limited edition sticker set' },
-    { name: '10% Off Next Visit', ptsReq: 50, emoji: '💸', sponsor: 'Cookies DC', desc: 'Discount on your next purchase' },
-    { name: 'Free Pre-Roll', ptsReq: 100, emoji: '🔥', sponsor: 'Cookies DC', desc: 'Complimentary Cookies pre-roll' },
-    { name: 'Cookies Hat', ptsReq: 100, emoji: '🧢', sponsor: 'Cookies DC', desc: 'Signature Cookies dad cap' },
-    { name: 'Sponsored Gift Bag', ptsReq: 150, emoji: '🎀', sponsor: 'Design Essentials', desc: 'Premium hair care bundle' },
-    { name: 'VIP Finale Access', ptsReq: 150, emoji: '🎟️', sponsor: 'Chi-Cha Lounge', desc: 'Skip the line + VIP section at finale' },
-    { name: 'Grand Prize — Cookies Merch Bundle + Gift Cards', ptsReq: 150, emoji: '👑', sponsor: 'Cookies DC + Partners', desc: 'Full merch set + $150 in gift cards' },
-  ];
-
   const spinLoginPrompt = document.getElementById('spin-login-prompt');
   const spinGame = document.getElementById('spin-game');
   const wheelCanvas = document.getElementById('wheel-canvas');
   const spinBtn = document.getElementById('spin-btn');
   const spinResult = document.getElementById('spin-result');
+  const spinSponsor = document.getElementById('spin-sponsor');
   const spinTokensDisplay = document.getElementById('spin-tokens-display');
   const bannerPoints = document.getElementById('banner-points');
   const yourPointsBanner = document.getElementById('your-points-banner');
-  const prizeGrid = document.getElementById('prize-grid');
+  const prizeList = document.getElementById('prize-list');
 
   let wheelAngle = 0;
   let isSpinning = false;
@@ -153,15 +227,13 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Label
+      // Emoji label
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(start + arc / 2);
       ctx.textAlign = 'center';
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 11px Inter, sans-serif';
-      const labelRadius = r * 0.65;
-      ctx.fillText(seg.label, labelRadius, 4);
+      ctx.font = '14px Inter, sans-serif';
+      ctx.fillText(seg.emoji, r * 0.7, 5);
       ctx.restore();
     });
 
@@ -178,26 +250,25 @@
   function spinWheel() {
     if (isSpinning) return;
     if (spinTokens < 1) {
-      showToast('No spins available! Earn 3 stamps for 1 spin.', 'error');
+      showToast('No spins! Collect 3 stamps to earn a spin.', 'error');
       return;
     }
 
     isSpinning = true;
     spinBtn.disabled = true;
     spinResult.textContent = 'Spinning...';
+    spinSponsor.textContent = '';
 
-    const spins = 4 + Math.random() * 4; // 4-8 full rotations
+    const spins = 4 + Math.random() * 4;
     const extra = Math.random() * 2 * Math.PI;
     const totalSpin = spins * 2 * Math.PI + extra;
     const duration = 3000 + Math.random() * 1500;
-
     const startAngle = wheelAngle;
     const startTime = performance.now();
 
     function animate(now) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       wheelAngle = startAngle + totalSpin * eased;
       drawWheel();
@@ -205,7 +276,6 @@
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
-        // Determine result
         const segs = WHEEL_PRIZES;
         const arc = (2 * Math.PI) / segs.length;
         const normalized = (2 * Math.PI - (wheelAngle % (2 * Math.PI))) % (2 * Math.PI);
@@ -213,74 +283,66 @@
         const prize = segs[idx % segs.length];
 
         spinResult.innerHTML = `${prize.emoji} <span class="grad">${prize.label}!</span>`;
+        spinSponsor.textContent = prize.sponsor ? `Courtesy of ${prize.sponsor}` : '';
+
+        if (prize.desc) showToast(prize.desc);
+
         spinBtn.disabled = false;
         isSpinning = false;
 
         useSpinToken().then(() => {
           spinTokensDisplay.textContent = spinTokens;
-          if (spinTokens < 1) {
-            spinBtn.style.opacity = '0.5';
-          }
+          if (spinTokens < 1) spinBtn.style.opacity = '0.5';
         });
 
-        if (prize.label !== 'Try Again') {
-          launchConfetti();
-          showToast(`You won: ${prize.label}!`);
-        }
+        if (prize.label !== 'Try Again') launchConfetti();
       }
     }
 
     requestAnimationFrame(animate);
   }
 
+  function buildPrizeList() {
+    prizeList.innerHTML = '';
+    WHEEL_PRIZES.filter(p => p.label !== 'Try Again').forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'prize-item';
+      item.innerHTML = `
+        <div class="prize-icon">${p.emoji}</div>
+        <div class="prize-info">
+          <div class="prize-name">${p.label}</div>
+          ${p.sponsor ? `<div class="prize-sponsor">Donated by ${p.sponsor}</div>` : ''}
+          ${p.desc ? `<div class="prize-pts">${p.desc}</div>` : ''}
+        </div>
+      `;
+      prizeList.appendChild(item);
+    });
+  }
+
   function updateUI() {
     const loggedIn = isLoggedIn();
-    bannerPoints.textContent = userPoints;
-
     if (loggedIn) {
+      bannerPoints.textContent = userPoints;
       yourPointsBanner.classList.remove('hidden');
       yourPointsBanner.style.display = 'inline-block';
       spinLoginPrompt.classList.add('hidden');
       spinGame.classList.remove('hidden');
       spinTokensDisplay.textContent = spinTokens;
-      if (spinTokens < 1) spinBtn.style.opacity = '0.5';
-      else spinBtn.style.opacity = '1';
+      spinBtn.style.opacity = spinTokens < 1 ? '0.5' : '1';
     } else {
       yourPointsBanner.classList.add('hidden');
       spinLoginPrompt.classList.remove('hidden');
       spinGame.classList.add('hidden');
     }
-
-    // Render prize grid
-    prizeGrid.innerHTML = '';
-    PRIZES.forEach(p => {
-      const unlocked = userPoints >= p.ptsReq;
-      const card = document.createElement('div');
-      card.className = `prize-card ${unlocked ? 'unlocked' : 'locked'}`;
-      card.innerHTML = `
-        <span class="prize-icon">${p.emoji}</span>
-        <div class="prize-info">
-          <div class="prize-name">${p.name}</div>
-          <div class="prize-sponsor">Courtesy of ${p.sponsor}</div>
-          <div class="prize-pts">${p.ptsReq} pts ${unlocked ? '— Unlocked ✅' : ''}</div>
-        </div>
-      `;
-      prizeGrid.appendChild(card);
-    });
+    buildPrizeList();
   }
 
-  // Initial draw
   drawWheel();
   updateUI();
-
-  // Spin button
   spinBtn.addEventListener('click', spinWheel);
 
-  // Re-render when data loads
   document.addEventListener('DOMContentLoaded', () => {
-    if (currentUser && isLoggedIn()) {
-      loadUserData().then(updateUI);
-    }
+    if (isLoggedIn()) loadUserData().then(updateUI);
   });
 </script>
 

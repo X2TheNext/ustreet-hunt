@@ -314,16 +314,47 @@ function getCheckpoint(id) {
   return CHECKPOINTS.find(c => c.id === id) || null;
 }
 
+// ── Team Code Generator ──
+// Generates a short, readable 6-char alphanumeric code (no 0/O/I/1 confusion)
+function generateTeamCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
+// ── Edit Profile (call from any page) ──
+async function editProfile({ displayName, teamName, teamCode }) {
+  const session = getSession();
+  if (!session?.userId) return { error: 'Not logged in' };
+  const sb = initSupabase();
+  const updates = {};
+  if (displayName !== undefined) updates.display_name = displayName;
+  if (teamName !== undefined) updates.team_name = teamName || null;
+  if (teamCode !== undefined) updates.team_code = teamCode || null;
+  const { error } = await sb.from('hunters').update(updates).eq('id', session.userId);
+  if (!error) {
+    currentUser = { ...currentUser, ...updates };
+    setSession({ ...session, ...updates });
+  }
+  return { error: error?.message || null };
+}
+
 // ── Prize Wheel Prizes ──
+// Each slot shows the donating business so players associate the win with that location.
 const WHEEL_PRIZES = [
-  { label: '10 Bonus Pts', emoji: '⭐', color: '#5b9dff' },
-  { label: 'Cookies Sticker', emoji: '🍪', color: '#1a73e8' },
-  { label: '5 Bonus Pts', emoji: '✨', color: '#3d7be8' },
-  { label: 'Free Entry', emoji: '🎟️', color: '#7b5dff' },
-  { label: '15 Bonus Pts', emoji: '🔥', color: '#e8a020' },
-  { label: 'Drink Token', emoji: '🥤', color: '#20c870' },
-  { label: 'Try Again', emoji: '🔄', color: '#5d6f97' },
-  { label: 'Cookies Hat', emoji: '🧢', color: '#e85050' },
+  { label: 'Free Scoop',      emoji: '🍦', color: '#5b9dff',  sponsor: "Jeni's Ice Cream",    desc: "Walk in and show this — free scoop on Jeni's." },
+  { label: 'Cookies Sticker', emoji: '🍪', color: '#1a73e8',  sponsor: 'Cookies DC',           desc: 'Limited edition Cookies DC sticker pack.' },
+  { label: '+10 Bonus Pts',   emoji: '⭐', color: '#3d7be8',  sponsor: null,                   desc: '10 bonus points added to your passport.' },
+  { label: 'Free Tea',        emoji: '💨', color: '#7b5dff',  sponsor: 'Tipsy Hookah Lounge',  desc: 'Free tea with any hookah session at Tipsy.' },
+  { label: 'Free Dessert',    emoji: '🍽️', color: '#e8a020',  sponsor: 'Oohs & Ahhs',          desc: 'Free dessert with any entree at Oohs & Ahhs.' },
+  { label: 'Free Drink',      emoji: '🌶️', color: '#20c870',  sponsor: 'Spicy Water',           desc: 'Free drink on arrival at Spicy Water.' },
+  { label: 'Try Again',       emoji: '🔄', color: '#4a5a7a',  sponsor: null,                   desc: 'Better luck next spin!' },
+  { label: 'Free Chili Dog',  emoji: '🌭', color: '#c85020',  sponsor: "Ben's Next Door",       desc: "Free chili dog with any order at Ben's Next Door." },
+  { label: 'Cookies Merch',   emoji: '🧢', color: '#1560cc',  sponsor: 'Cookies DC',           desc: 'Cookies DC branded merch — claimed at HQ.' },
+  { label: '+15 Bonus Pts',   emoji: '🔥', color: '#d47010',  sponsor: null,                   desc: '15 bonus points — big jump on the leaderboard.' },
 ];
 
 // ── Confetti ──
